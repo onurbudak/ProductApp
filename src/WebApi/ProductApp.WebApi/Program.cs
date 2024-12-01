@@ -1,38 +1,35 @@
 ﻿using MassTransit;
 using ProductApp.Application;
-using ProductApp.Application.Consumers;
 using ProductApp.Application.Extensions;
 using ProductApp.Persistence;
 
 var builder = WebApplication.CreateBuilder(args);
 
+var configuration = builder.Configuration;
+
+var rabbitMqConfig = configuration.GetSection("RabbitMq");
+string host = rabbitMqConfig["host"] ?? string.Empty;
+string username = rabbitMqConfig["username"] ?? string.Empty;
+string password = rabbitMqConfig["password"] ?? string.Empty;
+
 //await RabbitMqFactory.ConnectionAsync();
 
 builder.Services.AddMassTransit(x =>
 {
-    //Consumer'ı ekliyoruz
-    //x.AddConsumer<ProductMessageConsumer>();
-
     // RabbitMQ ile bağlantıyı kuruyoruz
     x.UsingRabbitMq((context, cfg) =>
     {
         // RabbitMQ sunucusuna bağlantı bilgilerini ekliyoruz
-        cfg.Host("localhost", h =>
+        cfg.Host(host, h =>
         {
-            h.Username("guest");
-            h.Password("guest");
+            h.Username(username);
+            h.Password(password);
         });
-
-        //Consumer'ı dinlemek için endpoint ekliyoruz
-        //cfg.ReceiveEndpoint("product_queue", e =>
-        //{
-        //    e.ConfigureConsumer<ProductMessageConsumer>(context);
-        //});
     });
 });
 
 builder.Services.AddApplicationRegistration();
-builder.Services.AddPersistenceRegistration(builder.Configuration);
+builder.Services.AddPersistenceRegistration(configuration);
 
 // Add services to the container.
 
