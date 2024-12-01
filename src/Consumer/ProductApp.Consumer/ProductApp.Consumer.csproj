@@ -7,14 +7,18 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="MassTransit" Version="8.3.2" />
-    <PackageReference Include="MassTransit.RabbitMQ" Version="8.3.2" />
+	<PackageReference Include="MassTransit" Version="8.3.2" />
+	<PackageReference Include="MassTransit.RabbitMQ" Version="8.3.2" />
     <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="9.0.0" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\..\Core\ProductApp.Application\ProductApp.Application.csproj" />
-    <ProjectReference Include="..\..\Infrastructure\ProductApp.Persistence\ProductApp.Persistence.csproj" />
+	<ProjectReference Include="..\..\Infrastructure\ProductApp.Persistence\ProductApp.Persistence.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Controllers\" />
   </ItemGroup>
 
 </Project>

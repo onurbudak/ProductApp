@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using ProductApp.Application.Common;
 using ProductApp.Application.Dto;
 using ProductApp.Application.Features.Commands.CreateProduct;
 using ProductApp.Application.Features.Commands.DeleteProduct;
@@ -22,5 +23,8 @@ public class GeneralMapping : Profile
 
         CreateMap<Product, DeleteProductCommand>()
          .ReverseMap();
+
+        CreateMap<ProductMessage, Product>()
+           .ReverseMap();
     }
 }

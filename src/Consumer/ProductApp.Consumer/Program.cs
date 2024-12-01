@@ -1,17 +1,17 @@
 ﻿using MassTransit;
+using ProductApp.Persistence;
 using ProductApp.Application;
 using ProductApp.Application.Consumers;
-using ProductApp.Application.Extensions;
-using ProductApp.Persistence;
 
 var builder = WebApplication.CreateBuilder(args);
 
-//await RabbitMqFactory.ConnectionAsync();
+builder.Services.AddApplicationRegistration();
+builder.Services.AddPersistenceRegistration(builder.Configuration);
 
 builder.Services.AddMassTransit(x =>
 {
     //Consumer'ı ekliyoruz
-    //x.AddConsumer<ProductMessageConsumer>();
+    x.AddConsumer<ProductMessageConsumer>();
 
     // RabbitMQ ile bağlantıyı kuruyoruz
     x.UsingRabbitMq((context, cfg) =>
@@ -24,15 +24,13 @@ builder.Services.AddMassTransit(x =>
         });
 
         //Consumer'ı dinlemek için endpoint ekliyoruz
-        //cfg.ReceiveEndpoint("product_queue", e =>
-        //{
-        //    e.ConfigureConsumer<ProductMessageConsumer>(context);
-        //});
+        cfg.ReceiveEndpoint("product_queue", e =>
+        {
+            e.ConfigureConsumer<ProductMessageConsumer>(context);
+        });
     });
 });
 
-builder.Services.AddApplicationRegistration();
-builder.Services.AddPersistenceRegistration(builder.Configuration);
 
 // Add services to the container.
 
@@ -42,13 +40,9 @@ builder.Services.AddOpenApi();
 
 var app = builder.Build();
 
-app.UseErrorHandler();
-app.UseLoggingHandler();
-
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
-    //app.UseDeveloperExceptionPage();
     app.MapOpenApi();
 }
 

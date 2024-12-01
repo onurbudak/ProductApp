@@ -15,6 +15,7 @@ public class GetAllProductsQuery : RequestParameter, IRequest<PaginatedResponse<
     {
         private readonly IProductRepository productRepository;
         private readonly IMapper mapper;
+      
 
         public GetAllProductsQueryHandler(IProductRepository productRepository, IMapper mapper)
         {
