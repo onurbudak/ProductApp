@@ -4,7 +4,7 @@ using ProductApp.Application.Interfaces.Repository;
 using ProductApp.Domain.Entities;
 using ProductApp.Application.Common;
 
-namespace ProductApp.Application.Consumers; 
+namespace ProductApp.Application.Consumers;
 
 public class ProductMessageConsumer : IConsumer<ProductMessage>
 {
@@ -18,10 +18,17 @@ public class ProductMessageConsumer : IConsumer<ProductMessage>
     }
     public async Task Consume(ConsumeContext<ProductMessage> context)
     {
-        Console.WriteLine($"Consumer received message: {context.Message.Status}");
+        try
+        {
+            Console.WriteLine($"Consumer received message: {context.Message.Status}");
 
-        var product = mapper.Map<Product>(context.Message);
-        await productRepository.UpdateAsync(product);
+            var product = mapper.Map<Product>(context.Message);
+            await productRepository.UpdateAsync(product);
+        }
+        catch (Exception ex)
+        {
+            throw new Exception(ex.Message, ex);
+        }
 
     }
 }

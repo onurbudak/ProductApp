@@ -12,6 +12,7 @@ string host = rabbitMqConfig["host"] ?? string.Empty;
 string username = rabbitMqConfig["username"] ?? string.Empty;
 string password = rabbitMqConfig["password"] ?? string.Empty;
 string productQueueName = rabbitMqConfig["productQueueName"] ?? string.Empty;
+string productQueueErrorName = rabbitMqConfig["productQueueErrorName"] ?? string.Empty;
 
 builder.Services.AddApplicationRegistration();
 builder.Services.AddPersistenceRegistration(configuration);
@@ -19,7 +20,6 @@ builder.Services.AddPersistenceRegistration(configuration);
 builder.Services.AddMassTransit(x =>
 {
     //Consumer'ı ekliyoruz
-
     x.AddConsumer<ProductMessageConsumer>();
 
     // RabbitMQ ile bağlantıyı kuruyoruz
@@ -36,7 +36,17 @@ builder.Services.AddMassTransit(x =>
         cfg.ReceiveEndpoint(productQueueName, e =>
         {
             e.ConfigureConsumer<ProductMessageConsumer>(context);
+            e.UseMessageRetry(r => r.Interval(3, TimeSpan.FromSeconds(20)));
+            e.UseInMemoryOutbox(context);
         });
+
+        //cfg.ReceiveEndpoint(productQueueErrorName , e =>
+        //{
+        //    e.ConfigureConsumer<ProductMessageConsumer>(context);
+        //    e.UseMessageRetry(r => r.Interval(3, TimeSpan.FromSeconds(20)));
+        //    e.UseInMemoryOutbox(context);
+        //});
+
     });
 });
 
