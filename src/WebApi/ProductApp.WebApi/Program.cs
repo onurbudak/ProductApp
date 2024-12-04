@@ -3,6 +3,8 @@ using ProductApp.Application;
 using ProductApp.Application.Consumers;
 using ProductApp.Application.Extensions;
 using ProductApp.Persistence;
+using Quartz;
+using ProductApp.Application.Jobs;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -40,6 +42,8 @@ builder.Services.AddMassTransit(x =>
         });
     });
 });
+
+IScheduler scheduler = await JobsFactory.CreateAsync();
 
 builder.Services.AddApplicationRegistration();
 builder.Services.AddPersistenceRegistration(configuration);
