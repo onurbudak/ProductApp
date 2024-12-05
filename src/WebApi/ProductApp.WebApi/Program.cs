@@ -3,8 +3,6 @@ using ProductApp.Application;
 using ProductApp.Application.Consumers;
 using ProductApp.Application.Extensions;
 using ProductApp.Persistence;
-using Quartz;
-using ProductApp.Application.Jobs;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -16,12 +14,10 @@ string username = rabbitMqConfig["username"] ?? string.Empty;
 string password = rabbitMqConfig["password"] ?? string.Empty;
 string productQueueName = rabbitMqConfig["productQueueName"] ?? string.Empty;
 
-//await RabbitMqFactory.ConnectionAsync();
-
 builder.Services.AddMassTransit(x =>
 {
     //Consumer'ı ekliyoruz
-    x.AddConsumer<ProductMessageConsumer>();
+    //x.AddConsumer<ProductMessageConsumer>();
 
     // RabbitMQ ile bağlantıyı kuruyoruz
     x.UsingRabbitMq((context, cfg) =>
@@ -34,16 +30,20 @@ builder.Services.AddMassTransit(x =>
         });
 
         //Consumer'ı dinlemek için endpoint ekliyoruz
-        cfg.ReceiveEndpoint(productQueueName, e =>
-        {
-            e.ConfigureConsumer<ProductMessageConsumer>(context);
-            e.UseMessageRetry(r => r.Interval(3, TimeSpan.FromSeconds(20)));
-            e.UseInMemoryOutbox(context);
-        });
+        //cfg.ReceiveEndpoint(productQueueName, e =>
+        //{
+        //    e.ConfigureConsumer<ProductMessageConsumer>(context);
+        //    e.UseMessageRetry(r => r.Interval(3, TimeSpan.FromSeconds(20)));
+        //    e.UseInMemoryOutbox(context);
+        //});
     });
 });
 
-IScheduler scheduler = await JobsFactory.CreateAsync();
+builder.Services.AddLogging(configure =>
+{
+    configure.AddConsole();
+    configure.SetMinimumLevel(LogLevel.Trace);
+});
 
 builder.Services.AddApplicationRegistration();
 builder.Services.AddPersistenceRegistration(configuration);
@@ -54,7 +54,7 @@ builder.Services.AddControllers();
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
 
-var app = builder.Build();
+var app = builder.Build();    
 
 app.UseErrorHandler();
 app.UseLoggingHandler();

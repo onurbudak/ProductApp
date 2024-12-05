@@ -11,7 +11,6 @@ public class RabbitMqFactory
         Console.WriteLine($"ConnectionAsync Started ...");
 
         ConnectionFactory factory = new ConnectionFactory() { HostName = hostName };
-
         IConnection connection = await factory.CreateConnectionAsync();
         IChannel channel = await connection.CreateChannelAsync();
 
@@ -20,65 +19,50 @@ public class RabbitMqFactory
         return channel;
     }
 
-    public async Task PublishAsync(string queue, string message)
+    public async Task PublishAsync(string hostName, string queue, string message)
     {
         Console.WriteLine($"PublishAsync Started ...");
 
-        IChannel channel = await ConnectionAsync("localhost");
-
-        // Kuyruk oluşturuluyor
+        IChannel channel = await ConnectionAsync(hostName);
         await channel.QueueDeclareAsync(queue: queue, durable: true, exclusive: false, autoDelete: false, arguments: null);
-
-        // Gönderilecek mesaj
         byte[] body = Encoding.UTF8.GetBytes(message);
-
         BasicProperties basicProperties = new BasicProperties();
-
-        // Asenkron mesaj gönderme işlemi
         await channel.BasicPublishAsync(exchange: "", routingKey: queue, mandatory: true, basicProperties: basicProperties, body: body);
 
         Console.WriteLine($"Publish Message : {message}");
-
         Console.WriteLine($"PublishAsync Finished ...");
 
     }
 
-    public async Task ConsumeAsync(string queue)
+    public async Task ConsumeAsync(string hostName, string queue)
     {
         Console.WriteLine($"ConsumeAsync Started ...");
 
-        IChannel channel = await ConnectionAsync("localhost");
-
+        IChannel channel = await ConnectionAsync(hostName);
         var consumer = new AsyncMessageConsumer(channel);
-
-        // Kuyruktan mesaj alıyoruz
         await channel.BasicConsumeAsync(queue: queue, autoAck: false, consumer: consumer);
 
         Console.WriteLine($"ConsumeAsync Finished ...");
     }
 
-    public class AsyncMessageConsumer : IAsyncBasicConsumer
+    private class AsyncMessageConsumer : IAsyncBasicConsumer
     {
-        private readonly IChannel channel;
-
         public IChannel Channel { get; set; }
 
         public AsyncMessageConsumer(IChannel channel)
         {
-            this.channel = channel;
+            Channel = channel;
         }
 
-        // Mesaj alındığında çalışacak metot
         public async Task HandleBasicDeliverAsync(string consumerTag, ulong deliveryTag, bool redelivered, string exchange, string routingKey, IReadOnlyBasicProperties properties, ReadOnlyMemory<byte> body, CancellationToken cancellationToken = default)
         {
             var message = Encoding.UTF8.GetString(body.Span);
+
             Console.WriteLine($"Received Message: {message}");
 
-            // Burada mesajı işleyebilirsiniz.
-            // Örnek: Asenkron bir işlem başlatabilirsiniz (veritabanı işlemleri vs.)
+            //await new RabbitMqFactory().PublishAsync("localhost", "product_queue", message);
 
-            // Mesaj işlendikten sonra onay (acknowledge) göndermek
-            await channel.BasicAckAsync(deliveryTag, false);
+            await Channel.BasicAckAsync(deliveryTag, false);
         }
 
         public Task HandleBasicConsumeOkAsync(string consumerTag, CancellationToken cancellationToken = default)

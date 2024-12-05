@@ -24,7 +24,7 @@ public class GeneralMapping : Profile
         CreateMap<Product, DeleteProductCommand>()
          .ReverseMap();
 
-        //CreateMap<ProductMessage, Product>()
-        //   .ReverseMap();
+        CreateMap<ProductMessage, Product>()
+           .ReverseMap();
     }
 }

@@ -18,7 +18,6 @@ public class UpdateProductCommand : IRequest<ServiceResponse<long>>
 
     public class UpdateProductCommandHandler : IRequestHandler<UpdateProductCommand, ServiceResponse<long>>
     {
-
         private readonly IProductRepository productRepository;
         private readonly IMapper mapper;
         private readonly IPublishEndpoint publishEndpoint;
@@ -34,7 +33,7 @@ public class UpdateProductCommand : IRequest<ServiceResponse<long>>
             var product = mapper.Map<Product>(request);
             var response = await productRepository.UpdateAsync(product);
 
-            await publishEndpoint.Publish(new ProductMessage { Id = product.Id, Status = 50 }, cancellationToken);
+            await publishEndpoint.Publish(new ProductMessage { Id = product.Id, Status = 53 }, cancellationToken);
 
             return ServiceResponse<long>.SuccessDataWithMessage(response.Id, "Başarılı");
         }

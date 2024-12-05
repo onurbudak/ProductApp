@@ -2,6 +2,8 @@
 using ProductApp.Persistence;
 using ProductApp.Application;
 using ProductApp.Application.Consumers;
+using ProductApp.Application.Jobs;
+using Quartz;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -50,6 +52,22 @@ builder.Services.AddMassTransit(x =>
     });
 });
 
+builder.Services.AddLogging(configure =>
+{
+    configure.AddConsole();
+    configure.SetMinimumLevel(LogLevel.Trace);
+});
+
+// Add Quartz and configure the job and scheduler
+builder.Services.AddQuartz(q =>
+{
+    // Quartz logging configuration
+    q.UseSimpleTypeLoader();
+    q.UseInMemoryStore();
+    q.UseDefaultThreadPool(tp => tp.MaxConcurrency = 10);
+});
+
+builder.Services.AddQuartzHostedService(q => q.WaitForJobsToComplete = true);
 
 // Add services to the container.
 
@@ -58,6 +76,8 @@ builder.Services.AddControllers();
 builder.Services.AddOpenApi();
 
 var app = builder.Build();
+
+IScheduler scheduler = await QuartzJobFactory<ProductMessageJob>.CreateJobAsync("ProductMessageJob", "Group1", "ProductMessageTrigger", "Group1", 120);
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

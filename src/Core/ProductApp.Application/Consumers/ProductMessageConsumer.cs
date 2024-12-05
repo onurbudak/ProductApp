@@ -23,12 +23,11 @@ public class ProductMessageConsumer : IConsumer<ProductMessage>
             Console.WriteLine($"Consumer received message: {context.Message.Status}");
 
             var product = mapper.Map<Product>(context.Message);
-            await productRepository.UpdateAsync(product);
+            await productRepository.UpdateAsync(null);
         }
         catch (Exception ex)
         {
             throw new Exception(ex.Message, ex);
         }
-
     }
 }

@@ -3,27 +3,26 @@ using Quartz;
 
 namespace ProductApp.Application.Jobs;
 
-public class JobsFactory
+public class QuartzJobFactory<T> where T : IJob
 {
-    public static async Task<IScheduler> CreateAsync()
+    public static async Task<IScheduler> CreateJobAsync(string jobName, string jobGroup, string triggerName, string triggerGroup, int intervalInSeconds)
     {
         var scheduler = await StdSchedulerFactory.GetDefaultScheduler();
         await scheduler.Start();
 
         // Job tanımını oluşturuyoruz
-        IJobDetail job = JobBuilder.Create<SendMessageJob>()
-            .WithIdentity("sendMessageJob", "group1")  // Job adı ve grubu
+        IJobDetail job = JobBuilder.Create<T>()
+            .WithIdentity(jobName, jobGroup)  // Job adı ve grubu
             .Build();
 
         // Job için trigger (tetikleyici) oluşturuyoruz
         ITrigger trigger = TriggerBuilder.Create()
-            .WithIdentity("trigger1", "group1")  // Trigger adı ve grubu
-            .StartNow()  // Hemen başlasın
+            .WithIdentity(triggerName, triggerGroup)  // Trigger adı ve grubu
+            .StartAt(DateTimeOffset.Now.AddSeconds(300))  // Hemen başlasın
             .WithSimpleSchedule(x => x
-                .WithIntervalInSeconds(180)  // 10 saniyede bir çalışsın
+                .WithIntervalInSeconds(intervalInSeconds)  // 10 saniyede bir çalışsın
                 .RepeatForever())  // Sonsuz defa tekrarlansın
             .Build();
-
 
         // Job ve Trigger'ı Quartz scheduler'a ekliyoruz
         await scheduler.ScheduleJob(job, trigger);
