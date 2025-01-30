@@ -77,7 +77,7 @@ builder.Services.AddOpenApi();
 
 var app = builder.Build();
 
-IScheduler scheduler = await QuartzJobFactory<ProductMessageJob>.CreateJobAsync("ProductMessageJob", "Group1", "ProductMessageTrigger", "Group1", 120);
+IScheduler scheduler = await QuartzJobFactory<ProductMessageJob>.CreateJobAsync("ProductMessageJob", "Group1", "ProductMessageTrigger", "Group1", 30);
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

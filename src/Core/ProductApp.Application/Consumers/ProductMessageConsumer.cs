@@ -21,7 +21,7 @@ public class ProductMessageConsumer : IConsumer<ProductMessage>
         try
         {
             Console.WriteLine($"Consumer received message: {context.Message.Status}");
-
+            context.Message.Status = 1001;
             var product = mapper.Map<Product>(context.Message);
             await productRepository.UpdateAsync(null);
         }

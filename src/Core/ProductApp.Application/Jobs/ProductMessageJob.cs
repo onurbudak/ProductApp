@@ -26,6 +26,7 @@ public class ProductMessageJob : IJob
         }
         catch (Exception ex)
         {
+            Console.WriteLine(ex);
             //_logger.LogError(ex, "Error in MyJob");
         }
     }

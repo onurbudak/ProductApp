@@ -33,7 +33,7 @@ public class UpdateProductCommand : IRequest<ServiceResponse<long>>
             var product = mapper.Map<Product>(request);
             var response = await productRepository.UpdateAsync(product);
 
-            await publishEndpoint.Publish(new ProductMessage { Id = product.Id, Status = 53 }, cancellationToken);
+            await publishEndpoint.Publish(new ProductMessage { Id = product.Id, Status = 101 }, cancellationToken);
 
             return ServiceResponse<long>.SuccessDataWithMessage(response.Id, "Başarılı");
         }
