@@ -18,9 +18,9 @@ public class QuartzJobFactory<T> where T : IJob
         // Job için trigger (tetikleyici) oluşturuyoruz
         ITrigger trigger = TriggerBuilder.Create()
             .WithIdentity(triggerName, triggerGroup)  // Trigger adı ve grubu
-            .StartAt(DateTimeOffset.Now.AddSeconds(60))  // Hemen başlasın
+            .StartAt(DateTimeOffset.Now.AddSeconds(300))  // 300 saniye sonra başlasın
             .WithSimpleSchedule(x => x
-                .WithIntervalInSeconds(intervalInSeconds)  // 10 saniyede bir çalışsın
+                .WithIntervalInSeconds(intervalInSeconds)  // intervalInSeconds saniyede bir çalışsın
                 .RepeatForever())  // Sonsuz defa tekrarlansın
             .Build();
 
