@@ -3,6 +3,7 @@ using ProductApp.Application;
 using ProductApp.Application.Consumers;
 using ProductApp.Application.Extensions;
 using ProductApp.Persistence;
+using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -39,6 +40,8 @@ builder.Services.AddMassTransit(x =>
     });
 });
 
+builder.Host.UseSerilog((_, loggerConfiguration) => loggerConfiguration.WriteTo.Console(formatProvider: null).ReadFrom.Configuration(configuration));
+
 builder.Services.AddLogging(configure =>
 {
     configure.AddConsole();
@@ -54,7 +57,9 @@ builder.Services.AddControllers();
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
 
-var app = builder.Build();    
+var app = builder.Build();
+
+app.UseSerilogRequestLogging();
 
 app.UseErrorHandler();
 app.UseLoggingHandler();

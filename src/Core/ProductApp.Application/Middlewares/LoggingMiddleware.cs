@@ -15,12 +15,12 @@ public class LoggingMiddleware
     public async Task InvokeAsync(HttpContext context)
     {
         // Log incoming request
-        _logger.LogInformation("Handling request: {Method} {Url}", context.Request.Method, context.Request.Path);
+        _logger.LogInformation("Request started : {Method} ", context.Request.Path);
 
         // Call the next middleware in the pipeline
         await _next(context);
 
         // Log outgoing response
-        _logger.LogInformation("Request handled with status code: {StatusCode}", context.Response.StatusCode);
+        _logger.LogInformation("Request finished : {Method} {Url} {StatusCode} ", context.Request.Method, context.Request.Path, context.Response.StatusCode);
     }
 }

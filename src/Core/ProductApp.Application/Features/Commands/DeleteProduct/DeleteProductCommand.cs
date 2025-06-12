@@ -13,18 +13,18 @@ public class DeleteProductCommand : IRequest<ServiceResponse<bool>>
     public class DeleteProductCommandHandler : IRequestHandler<DeleteProductCommand, ServiceResponse<bool>>
     {
 
-        private readonly IProductRepository productRepository;
-        private readonly IMapper mapper;
+        private readonly IProductRepository _productRepository;
+        private readonly IMapper _mapper;
 
         public DeleteProductCommandHandler(IProductRepository productRepository, IMapper mapper)
         {
-            this.productRepository = productRepository;
-            this.mapper = mapper;
+            _productRepository = productRepository;
+            _mapper = mapper;
         }
         public async Task<ServiceResponse<bool>> Handle(DeleteProductCommand request, CancellationToken cancellationToken)
         {
-            var product = mapper.Map<Product>(request);
-            var response = await productRepository.DeleteAsync(product);
+            var product = _mapper.Map<Product>(request);
+            var response = await _productRepository.DeleteAsync(product);
 
             return ServiceResponse<bool>.SuccessDataWithMessage(true, "Başarılı");
         }

@@ -2,7 +2,7 @@
 
 public class ServiceResponse<T> : BaseResponse
 {
-    public T Data { get; set; }
+    public T? Data { get; set; }
 
     public ServiceResponse(bool isSuccess) : base(isSuccess)
     {

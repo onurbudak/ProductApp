@@ -4,6 +4,7 @@ using ProductApp.Application;
 using ProductApp.Application.Consumers;
 using ProductApp.Application.Jobs;
 using Quartz;
+using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -15,6 +16,8 @@ string username = rabbitMqConfig["username"] ?? string.Empty;
 string password = rabbitMqConfig["password"] ?? string.Empty;
 string productQueueName = rabbitMqConfig["productQueueName"] ?? string.Empty;
 string productQueueErrorName = rabbitMqConfig["productQueueErrorName"] ?? string.Empty;
+
+builder.Host.UseSerilog((_, loggerConfiguration) => loggerConfiguration.WriteTo.Console(formatProvider: null).ReadFrom.Configuration(configuration));
 
 builder.Services.AddApplicationRegistration();
 builder.Services.AddPersistenceRegistration(configuration);
@@ -78,6 +81,8 @@ builder.Services.AddOpenApi();
 var app = builder.Build();
 
 IScheduler scheduler = await QuartzJobFactory<ProductMessageJob>.CreateJobAsync("ProductMessageJob", "Group1", "ProductMessageTrigger", "Group1", 120);
+
+app.UseSerilogRequestLogging();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

@@ -1,8 +1,10 @@
 ﻿using AutoMapper;
 using MassTransit;
 using MediatR;
+using Microsoft.Extensions.Logging;
 using ProductApp.Application.Common;
 using ProductApp.Application.Interfaces.Repository;
+using ProductApp.Application.Middlewares;
 using ProductApp.Application.Wrappers;
 using ProductApp.Domain.Entities;
 
@@ -18,22 +20,25 @@ public class UpdateProductCommand : IRequest<ServiceResponse<long>>
 
     public class UpdateProductCommandHandler : IRequestHandler<UpdateProductCommand, ServiceResponse<long>>
     {
-        private readonly IProductRepository productRepository;
-        private readonly IMapper mapper;
-        private readonly IPublishEndpoint publishEndpoint;
+        private readonly IProductRepository _productRepository;
+        private readonly IMapper _mapper;
+        private readonly IPublishEndpoint _publishEndpoint;
+        private readonly ILogger<UpdateProductCommandHandler> _logger;
 
-        public UpdateProductCommandHandler(IProductRepository productRepository, IMapper mapper, IPublishEndpoint publishEndpoint)
+        public UpdateProductCommandHandler(IProductRepository productRepository, IMapper mapper, IPublishEndpoint publishEndpoint, ILogger<UpdateProductCommandHandler> logger)
         {
-            this.productRepository = productRepository;
-            this.mapper = mapper;
-            this.publishEndpoint = publishEndpoint;
+            _productRepository = productRepository;
+            _mapper = mapper;
+            _publishEndpoint = publishEndpoint;
+            _logger = logger;
         }
         public async Task<ServiceResponse<long>> Handle(UpdateProductCommand request, CancellationToken cancellationToken)
         {
-            var product = mapper.Map<Product>(request);
-            var response = await productRepository.UpdateAsync(product);
+            _logger.LogInformation("UpdateProductCommandHandler method started");
+            var product = _mapper.Map<Product>(request);
+            var response = await _productRepository.UpdateAsync(product);
 
-            await publishEndpoint.Publish(new ProductMessage { Id = product.Id, Status = 101 }, cancellationToken);
+            await _publishEndpoint.Publish(new ProductMessage { Id = product.Id, Status = 101 }, cancellationToken);
 
             return ServiceResponse<long>.SuccessDataWithMessage(response.Id, "Başarılı");
         }

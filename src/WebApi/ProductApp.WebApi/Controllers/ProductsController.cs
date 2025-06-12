@@ -12,22 +12,22 @@ namespace ProductApp.WebApi.Controllers;
 [ApiController]
 public class ProductsController : ControllerBase
 {
-    private readonly IMediator mediator;
+    private readonly IMediator _mediator;
 
     public ProductsController(IMediator mediator)
     {
-        this.mediator = mediator;
+        _mediator = mediator;
     }
 
     /// <summary>
-    /// Get
+    /// GetList
     /// </summary>
     /// <param name="request"></param>
     /// <returns></returns>
-    [HttpGet()]
-    public async Task<IActionResult> Get([FromQuery] GetAllProductsQuery request)
+    [HttpGet]
+    public async Task<IActionResult> GetList([FromQuery] GetAllProductsQuery request)
     {
-        var response = await mediator.Send(request);
+        var response = await _mediator.Send(request);
         return response.IsSuccess ? Ok(response) : BadRequest(response);
     }
 
@@ -39,7 +39,7 @@ public class ProductsController : ControllerBase
     [HttpGet("{id}")]
     public async Task<IActionResult> GetById([FromRoute] GetByIdProductQuery request)
     {
-        var response = await mediator.Send(request);
+        var response = await _mediator.Send(request);
         return response.IsSuccess ? Ok(response) : BadRequest(response);
     }
 
@@ -51,7 +51,7 @@ public class ProductsController : ControllerBase
     [HttpPost]
     public async Task<IActionResult> Add([FromBody] CreateProductCommand request)
     {
-        var response = await mediator.Send(request);
+        var response = await _mediator.Send(request);
         return response.IsSuccess ? Ok(response) : BadRequest(response);
     }
 
@@ -63,7 +63,7 @@ public class ProductsController : ControllerBase
     [HttpPut]
     public async Task<IActionResult> Update([FromBody] UpdateProductCommand request)
     {
-        var response = await mediator.Send(request);
+        var response = await _mediator.Send(request);
         return response.IsSuccess ? Ok(response) : BadRequest(response);
     }
 
@@ -75,7 +75,7 @@ public class ProductsController : ControllerBase
     [HttpDelete]
     public async Task<IActionResult> Delete([FromBody] DeleteProductCommand request)
     {
-        var response = await mediator.Send(request);
+        var response = await _mediator.Send(request);
         return response.IsSuccess ? Ok(response) : BadRequest(response);
     }
 }

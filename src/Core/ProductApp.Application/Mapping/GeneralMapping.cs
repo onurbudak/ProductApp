@@ -14,16 +14,12 @@ public class GeneralMapping : Profile
     {
         CreateMap<Product, ProductViewDto>()
             .ReverseMap();
-
         CreateMap<Product, CreateProductCommand>()
             .ReverseMap();
-
         CreateMap<Product, UpdateProductCommand>()
          .ReverseMap();
-
         CreateMap<Product, DeleteProductCommand>()
          .ReverseMap();
-
         CreateMap<ProductMessage, Product>()
            .ReverseMap();
     }

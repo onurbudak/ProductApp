@@ -13,21 +13,21 @@ public class GetAllProductsQuery : RequestParameter, IRequest<PaginatedResponse<
 {
     public class GetAllProductsQueryHandler : IRequestHandler<GetAllProductsQuery, PaginatedResponse<List<ProductViewDto>>>
     {
-        private readonly IProductRepository productRepository;
-        private readonly IMapper mapper;
+        private readonly IProductRepository _productRepository;
+        private readonly IMapper _mapper;
       
 
         public GetAllProductsQueryHandler(IProductRepository productRepository, IMapper mapper)
         {
-            this.productRepository = productRepository;
-            this.mapper = mapper;
+            _productRepository = productRepository;
+            _mapper = mapper;
         }
 
         public async Task<PaginatedResponse<List<ProductViewDto>>> Handle(GetAllProductsQuery request, CancellationToken cancellationToken)
         {
-            List<Product> products = await productRepository.GetAllAsync();
+            List<Product> products = await _productRepository.GetAllAsync();
             products.Paginated(request.PageNumber, request.PageSize, out int totalItems, out var paginatedDatas);
-            List<ProductViewDto> productsViewModel = mapper.Map<List<ProductViewDto>>(paginatedDatas);
+            List<ProductViewDto> productsViewModel = _mapper.Map<List<ProductViewDto>>(paginatedDatas);
 
             return PaginatedResponse<List<ProductViewDto>>.SuccessWithMessage(productsViewModel, "Başarılı", totalItems, request.PageNumber, request.PageSize);
         }

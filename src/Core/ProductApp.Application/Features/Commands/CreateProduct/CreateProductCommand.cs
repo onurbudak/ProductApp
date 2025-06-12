@@ -15,18 +15,18 @@ public class CreateProductCommand : IRequest<ServiceResponse<long>>
     public class CreateProductCommandHandler : IRequestHandler<CreateProductCommand, ServiceResponse<long>>
     {
 
-        private readonly IProductRepository productRepository;
-        private readonly IMapper mapper;
+        private readonly IProductRepository _productRepository;
+        private readonly IMapper _mapper;
 
         public CreateProductCommandHandler(IProductRepository productRepository, IMapper mapper)
         {
-            this.productRepository = productRepository;
-            this.mapper = mapper;
+            _productRepository = productRepository;
+            _mapper = mapper;
         }
         public async Task<ServiceResponse<long>> Handle(CreateProductCommand request, CancellationToken cancellationToken)
         {
-            var product = mapper.Map<Product>(request);
-            await productRepository.AddAsync(product);
+            var product = _mapper.Map<Product>(request);
+            await _productRepository.AddAsync(product);
 
             return ServiceResponse<long>.SuccessDataWithMessage(product.Id, "Başarılı");
         }

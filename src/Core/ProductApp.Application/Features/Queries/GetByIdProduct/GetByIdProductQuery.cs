@@ -13,19 +13,19 @@ public class GetByIdProductQuery : IRequest<ServiceResponse<ProductViewDto>>
 
     public class GetByIdProductQueryHandler : IRequestHandler<GetByIdProductQuery, ServiceResponse<ProductViewDto>>
     {
-        private readonly IProductRepository productRepository;
-        private readonly IMapper mapper;
+        private readonly IProductRepository _productRepository;
+        private readonly IMapper _mapper;
 
         public GetByIdProductQueryHandler(IProductRepository productRepository, IMapper mapper)
         {
-            this.productRepository = productRepository;
-            this.mapper = mapper;
+            _productRepository = productRepository;
+            _mapper = mapper;
         }
 
         public async Task<ServiceResponse<ProductViewDto>> Handle(GetByIdProductQuery request, CancellationToken cancellationToken)
         {
-            Product? product = await productRepository.GetByIdAsync(request.Id);
-            ProductViewDto productViewModel = mapper.Map<ProductViewDto>(product);
+            Product? product = await _productRepository.GetByIdAsync(request.Id);
+            ProductViewDto productViewModel = _mapper.Map<ProductViewDto>(product);
 
             return ServiceResponse<ProductViewDto>.SuccessDataWithMessage(productViewModel, "Başarılı");
         }
