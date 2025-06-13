@@ -5,6 +5,7 @@ using ProductApp.Application.Consumers;
 using ProductApp.Application.Jobs;
 using Quartz;
 using Serilog;
+using ProductApp.Application.Queues;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -18,6 +19,9 @@ string productQueueName = rabbitMqConfig["productQueueName"] ?? string.Empty;
 string productQueueErrorName = rabbitMqConfig["productQueueErrorName"] ?? string.Empty;
 
 builder.Host.UseSerilog((_, loggerConfiguration) => loggerConfiguration.WriteTo.Console(formatProvider: null).ReadFrom.Configuration(configuration));
+
+builder.Services.AddSingleton<IRabbitMqFactory, RabbitMqFactory>();
+//builder.Services.AddSingleton<IJob, ProductMessageJob>();
 
 builder.Services.AddApplicationRegistration();
 builder.Services.AddPersistenceRegistration(configuration);
@@ -64,6 +68,18 @@ builder.Services.AddLogging(configure =>
 // Add Quartz and configure the job and scheduler
 builder.Services.AddQuartz(q =>
 {
+    var jobKey = new JobKey("ProductMessageJob");
+
+    q.AddJob<ProductMessageJob>(opts => opts.WithIdentity(jobKey));
+
+    q.AddTrigger(opts => opts
+        .ForJob(jobKey)
+        .WithIdentity("ProductMessageTrigger")
+        .StartAt(DateTimeOffset.Now.AddSeconds(30))
+        .WithSimpleSchedule(x => x
+            .WithIntervalInSeconds(45)
+            .RepeatForever()));
+
     // Quartz logging configuration
     q.UseSimpleTypeLoader();
     q.UseInMemoryStore();
@@ -80,7 +96,7 @@ builder.Services.AddOpenApi();
 
 var app = builder.Build();
 
-IScheduler scheduler = await QuartzJobFactory<ProductMessageJob>.CreateJobAsync("ProductMessageJob", "Group1", "ProductMessageTrigger", "Group1", 120);
+//IScheduler scheduler = await QuartzJobFactory<ProductMessageJob>.CreateJobAsync("ProductMessageJob", "ProductMessageJobGroup", "ProductMessageTrigger", "ProductMessageTriggerGroup", 300, 120);
 
 app.UseSerilogRequestLogging();
 

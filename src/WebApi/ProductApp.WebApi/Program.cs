@@ -1,6 +1,5 @@
 ﻿using MassTransit;
 using ProductApp.Application;
-using ProductApp.Application.Consumers;
 using ProductApp.Application.Extensions;
 using ProductApp.Persistence;
 using Serilog;

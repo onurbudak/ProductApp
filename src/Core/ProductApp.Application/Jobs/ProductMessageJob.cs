@@ -6,28 +6,27 @@ namespace ProductApp.Application.Jobs;
 
 public class ProductMessageJob : IJob
 {
-    //private readonly ILogger<ProductMessageJob> _logger;
+    private readonly IRabbitMqFactory _rabbitMqFactory;
+    private readonly ILogger<ProductMessageJob> _logger;
 
-    //public ProductMessageJob(ILogger<ProductMessageJob> logger)
-    //{
-    //    _logger = logger;
-    //}
+    public ProductMessageJob(IRabbitMqFactory rabbitMqFactory, ILogger<ProductMessageJob> logger)
+    {
+        _logger = logger;
+        _rabbitMqFactory = rabbitMqFactory;
+    }
 
     public async Task Execute(IJobExecutionContext context)
     {
         try
         {
-            //_logger.LogInformation("Job started");
-            // Your job logic goes here
-
-            await new RabbitMqFactory().ConsumeAsync("localhost", "product_queue_error");
-
-            //throw new Exception("An error occurred during job execution.");
+            _logger.LogInformation("ProductMessageJob started");
+            await _rabbitMqFactory.ConsumeAsync("localhost", "product_queue_error");
         }
         catch (Exception ex)
         {
-            Console.WriteLine(ex);
-            //_logger.LogError(ex, "Error in MyJob");
+            //Console.WriteLine(ex);
+            _logger.LogError(ex, "Error ProductMessageJob");
+            //throw new Exception("An error occurred during ProductMessageJob execution.");
         }
     }
 }

@@ -5,7 +5,7 @@ namespace ProductApp.Application.Jobs;
 
 public class QuartzJobFactory<T> where T : IJob
 {
-    public static async Task<IScheduler> CreateJobAsync(string jobName, string jobGroup, string triggerName, string triggerGroup, int intervalInSeconds)
+    public static async Task<IScheduler> CreateJobAsync(string jobName, string jobGroup, string triggerName, string triggerGroup, double startAt, int intervalInSeconds)
     {
         var scheduler = await StdSchedulerFactory.GetDefaultScheduler();
         await scheduler.Start();
@@ -18,7 +18,7 @@ public class QuartzJobFactory<T> where T : IJob
         // Job için trigger (tetikleyici) oluşturuyoruz
         ITrigger trigger = TriggerBuilder.Create()
             .WithIdentity(triggerName, triggerGroup)  // Trigger adı ve grubu
-            .StartAt(DateTimeOffset.Now.AddSeconds(300))  // 300 saniye sonra başlasın
+            .StartAt(DateTimeOffset.Now.AddSeconds(startAt))  // startAt saniye sonra başlasın
             .WithSimpleSchedule(x => x
                 .WithIntervalInSeconds(intervalInSeconds)  // intervalInSeconds saniyede bir çalışsın
                 .RepeatForever())  // Sonsuz defa tekrarlansın
