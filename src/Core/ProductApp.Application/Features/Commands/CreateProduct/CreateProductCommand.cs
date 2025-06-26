@@ -9,8 +9,9 @@ namespace ProductApp.Application.Features.Commands.CreateProduct;
 public class CreateProductCommand : IRequest<ServiceResponse<long>>
 {
     public string? Name { get; set; }
-    public decimal Value { get; set; }
-    public int Quantity { get; set; }
+    public decimal? Value { get; set; }
+    public long? Quantity { get; set; }
+    public short Status { get; set; }
 
     public class CreateProductCommandHandler : IRequestHandler<CreateProductCommand, ServiceResponse<long>>
     {

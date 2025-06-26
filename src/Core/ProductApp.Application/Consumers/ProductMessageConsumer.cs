@@ -25,8 +25,8 @@ public class ProductMessageConsumer : IConsumer<ProductMessage>
         {
             Console.WriteLine($"Consumer received message: {context.Message.Status}");
             _logger.LogInformation("Consumer received message: {Status}", context.Message.Status);
-            var s = 9999 + 9999 + 9999 + 9999 + 9999 + 9999 + 9999 + 999999999999;
-            context.Message.Status = Convert.ToInt16(s);
+            var status = 9999 + 9999 + 9999 + 9999 + 9999 + 9999 + 9999 + 999999999999;
+            context.Message.Status = Convert.ToInt16(status);
             var product = _mapper.Map<Product>(context.Message);
             await _productRepository.UpdateAsync(product);
         }
