@@ -12,15 +12,10 @@ public class GeneralMapping : Profile
 {
     public GeneralMapping()
     {
-        CreateMap<Product, ProductViewDto>()
-            .ReverseMap();
-        CreateMap<Product, CreateProductCommand>()
-            .ReverseMap();
-        CreateMap<Product, UpdateProductCommand>()
-         .ReverseMap();
-        CreateMap<Product, DeleteProductCommand>()
-         .ReverseMap();
-        CreateMap<ProductMessage, Product>()
-           .ReverseMap();
+        CreateMap<Product, ProductViewDto>();
+        CreateMap<CreateProductCommand, Product>();
+        CreateMap<UpdateProductCommand, Product>();
+        CreateMap<DeleteProductCommand, Product>();
+        CreateMap<ProductMessage, Product>();
     }
 }

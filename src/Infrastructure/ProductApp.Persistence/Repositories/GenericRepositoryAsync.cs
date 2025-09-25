@@ -5,60 +5,53 @@ using ProductApp.Persistence.Context;
 
 namespace ProductApp.Persistence.Repositories;
 
-public class GenericRepositoryAsync<TEntity> : IGenericRepositoryAsync<TEntity> where TEntity : BaseEntity
+public class GenericRepositoryAsync<TEntity> : IGenericRepositoryAsync<TEntity> where TEntity : BaseEntity, new()
 {
-
-    private readonly ApplicationDbContext dbContext;
+    private readonly ApplicationDbContext _dbContext;
 
     public GenericRepositoryAsync(ApplicationDbContext dbContext)
     {
-        this.dbContext = dbContext;
+        _dbContext = dbContext;
     }
 
-    public async Task<List<TEntity>> GetAllAsync() => await dbContext.Set<TEntity>().ToListAsync();
+    public async Task<List<TEntity>> GetAllAsync() => await _dbContext.Set<TEntity>().Where(e => !e.IsDeleted).ToListAsync();
 
-    public async Task<TEntity?> GetByIdAsync(long Id) => await dbContext.Set<TEntity>().FindAsync(Id);
+    public async Task<TEntity?> GetByIdAsync(long id) => await _dbContext.Set<TEntity>().FindAsync(id);
 
     public async Task<TEntity> AddAsync(TEntity entity)
     {
-        entity.CreateUserId = 0;
         entity.CreateDate = DateTime.Now;
-        await dbContext.Set<TEntity>().AddAsync(entity);
-        await dbContext.SaveChangesAsync();
+        await _dbContext.AddAsync(entity);
+        await _dbContext.SaveChangesAsync();
         return entity;
     }
 
-    public async Task<TEntity> UpdateAsync(TEntity entity)
+    public async Task<TEntity?> UpdateAsync(TEntity entity)
     {
-        var updatedEntity = await dbContext.Set<TEntity>().FindAsync(entity.Id);
-        if (updatedEntity is not null)
+        TEntity? existingEntity = await _dbContext.Set<TEntity>().FindAsync(entity.Id);
+        if (existingEntity is not null)
         {
-            dbContext.Entry(updatedEntity).State = EntityState.Detached;
-            entity.CreateDate = updatedEntity.CreateDate;
-            entity.CreateUserId = updatedEntity.CreateUserId;
-            entity.DeleteDate = updatedEntity.DeleteDate;
-            entity.DeleteUserId = updatedEntity.DeleteUserId;
-            entity.UpdateUserId = 0;
-            entity.UpdateDate = DateTime.Now;
-
-            dbContext.Update(entity);
-        }
-        await dbContext.SaveChangesAsync();
-        return entity;
+            entity.CreateDate = existingEntity.CreateDate;
+            entity.CreateUserId = existingEntity.CreateUserId;
+            entity.DeleteDate = existingEntity.DeleteDate;
+            entity.DeleteUserId = existingEntity.DeleteUserId;
+            _dbContext.Entry(existingEntity).CurrentValues.SetValues(entity);
+            existingEntity.UpdateDate = DateTime.Now;
+            await _dbContext.SaveChangesAsync();
+        }    
+        return existingEntity;
     }
 
-    public async Task<TEntity> DeleteAsync(TEntity entity)
+    public async Task<TEntity?> DeleteAsync(TEntity entity)
     {
-        var deletedEntity = await dbContext.Set<TEntity>().FindAsync(entity.Id);
-        if (deletedEntity is not null)
+        TEntity? existingEntity = await _dbContext.Set<TEntity>().FindAsync(entity.Id);
+        if (existingEntity is not null)
         {
-            deletedEntity.DeleteUserId = 0;
-            deletedEntity.DeleteDate = DateTime.Now;
-            deletedEntity.IsDeleted = true;
-
-            dbContext.Update(deletedEntity);
-        }
-        await dbContext.SaveChangesAsync();
-        return entity;
+            existingEntity.DeleteDate = DateTime.Now;
+            existingEntity.IsDeleted = true;
+            await _dbContext.SaveChangesAsync();
+        }     
+        return existingEntity;
     }
 }
+

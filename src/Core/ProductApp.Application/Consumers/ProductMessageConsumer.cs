@@ -4,6 +4,8 @@ using ProductApp.Application.Interfaces.Repository;
 using ProductApp.Domain.Entities;
 using ProductApp.Application.Common;
 using Microsoft.Extensions.Logging;
+using System.Diagnostics;
+using MassTransit.Metadata;
 
 namespace ProductApp.Application.Consumers;
 
@@ -23,12 +25,16 @@ public class ProductMessageConsumer : IConsumer<ProductMessage>
     {
         try
         {
+            Stopwatch timer = Stopwatch.StartNew();
+
             Console.WriteLine($"Consumer received message: {context.Message.Status}");
             _logger.LogInformation("Consumer received message: {Status}", context.Message.Status);
             var status = 9999 + 9999 + 9999 + 9999 + 9999 + 9999 + 9999 + 999999999999;
             context.Message.Status = Convert.ToInt16(status);
             var product = _mapper.Map<Product>(context.Message);
             await _productRepository.UpdateAsync(product);
+
+            await context.NotifyConsumed(timer.Elapsed, TypeMetadataCache<Product>.ShortName);
         }
         catch (Exception ex)
         {
