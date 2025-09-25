@@ -5,6 +5,7 @@ using ProductApp.Application.Wrappers;
 using ProductApp.Domain.Entities;
 
 namespace ProductApp.Application.Features.Commands.DeleteProduct;
+
 public class DeleteProductCommandHandler : IRequestHandler<DeleteProductCommand, ServiceResponse<bool>>
 {
     private readonly IProductRepository _productRepository;
@@ -17,9 +18,10 @@ public class DeleteProductCommandHandler : IRequestHandler<DeleteProductCommand,
     }
     public async Task<ServiceResponse<bool>> Handle(DeleteProductCommand request, CancellationToken cancellationToken)
     {
-        Product product = _mapper.Map<Product>(request);
-        Product response = await _productRepository.DeleteAsync(product);
-        return ServiceResponse<bool>.SuccessDataWithMessage(true, "Başarılı");
+        Product mappedProduct = _mapper.Map<Product>(request);
+        Product? product = await _productRepository.DeleteAsync(mappedProduct);
+
+        return product is not null ? ServiceResponse<bool>.SuccessMessageWithData(true, "Başarılı") : ServiceResponse<bool>.ErrorMessageWithData(false, "Başarısız");
     }
 }
 

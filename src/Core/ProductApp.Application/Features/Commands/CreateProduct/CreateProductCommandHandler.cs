@@ -18,9 +18,9 @@ public class CreateProductCommandHandler : IRequestHandler<CreateProductCommand,
     }
     public async Task<ServiceResponse<bool>> Handle(CreateProductCommand request, CancellationToken cancellationToken)
     {
-        Product product = _mapper.Map<Product>(request);
-        await _productRepository.AddAsync(product);
-        return ServiceResponse<bool>.SuccessDataWithMessage(true, "Başarılı");
+        Product mappedProduct = _mapper.Map<Product>(request);
+        Product product = await _productRepository.AddAsync(mappedProduct);
+        return product is not null ? ServiceResponse<bool>.SuccessMessageWithData(true, "Başarılı") : ServiceResponse<bool>.ErrorMessageWithData(false, "Başarısız");
     }
 }
 

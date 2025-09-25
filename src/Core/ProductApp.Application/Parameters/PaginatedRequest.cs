@@ -1,6 +1,6 @@
 ﻿namespace ProductApp.Application.Parameters;
 
-public class RequestParameter
+public class PaginatedRequest
 {
     public int PageSize { get; set; }
 

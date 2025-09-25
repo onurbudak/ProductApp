@@ -9,7 +9,7 @@ using ProductApp.Domain.Entities;
 
 namespace ProductApp.Application.Features.Commands.UpdateProduct;
 
-public class UpdateProductCommandHandler : IRequestHandler<UpdateProductCommand, ServiceResponse<bool>>
+public class UpdateProductCommandHandler : IRequestHandler<UpdateProductCommand, BaseResponse>
 {
     private readonly IProductRepository _productRepository;
     private readonly IMapper _mapper;
@@ -18,18 +18,21 @@ public class UpdateProductCommandHandler : IRequestHandler<UpdateProductCommand,
 
     public UpdateProductCommandHandler(IProductRepository productRepository, IMapper mapper, IPublishEndpoint publishEndpoint, ILogger<UpdateProductCommandHandler> logger)
     {
-        _productRepository = productRepository;
+        _productRepository = productRepository; 
         _mapper = mapper;
         _publishEndpoint = publishEndpoint;
         _logger = logger;
     }
-    public async Task<ServiceResponse<bool>> Handle(UpdateProductCommand request, CancellationToken cancellationToken)
+    public async Task<BaseResponse> Handle(UpdateProductCommand request, CancellationToken cancellationToken)
     {
         //_logger.LogInformation("UpdateProductCommandHandler method started");
-        Product product = _mapper.Map<Product>(request);
-        Product response = await _productRepository.UpdateAsync(product);
+
+        Product mappedProduct = _mapper.Map<Product>(request);
+        Product? product = await _productRepository.UpdateAsync(mappedProduct);
+
         //await _publishEndpoint.Publish(new ProductMessage { Id = product.Id, Status = 101 }, cancellationToken);
-        return ServiceResponse<bool>.SuccessDataWithMessage(true, "Başarılı");
+
+        return product is not null ? BaseResponse.SuccessMessage("Başarılı") : BaseResponse.ErrorMessage("Başarısız");
     }
 }
 

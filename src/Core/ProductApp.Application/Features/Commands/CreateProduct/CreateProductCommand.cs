@@ -8,5 +8,4 @@ public class CreateProductCommand : IRequest<ServiceResponse<bool>>
     public string? Name { get; set; }
     public decimal? Value { get; set; }
     public long? Quantity { get; set; }
-    public short Status { get; set; }
 }

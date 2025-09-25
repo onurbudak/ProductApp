@@ -1,10 +1,10 @@
 ﻿using MediatR;
+using ProductApp.Application.Wrappers;
 using ProductApp.Application.Dto;
 using ProductApp.Application.Parameters;
-using ProductApp.Application.Wrappers;
 
 namespace ProductApp.Application.Features.Queries.GetAllProducts;
 
-public class GetAllProductsQuery : RequestParameter, IRequest<PaginatedResponse<List<ProductViewDto>>>
+public class GetAllProductsQuery : PaginatedRequest, IRequest<PaginatedResponse<List<ProductViewDto>>>
 {
 }

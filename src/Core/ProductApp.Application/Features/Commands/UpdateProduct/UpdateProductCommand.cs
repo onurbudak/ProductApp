@@ -3,7 +3,7 @@ using ProductApp.Application.Wrappers;
 
 namespace ProductApp.Application.Features.Commands.UpdateProduct;
 
-public class UpdateProductCommand : IRequest<ServiceResponse<bool>>
+public class UpdateProductCommand : IRequest<BaseResponse>
 {
     public long Id { get; set; }
     public string? Name { get; set; }

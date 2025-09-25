@@ -22,7 +22,7 @@ public class GetByIdProductQueryHandler : IRequestHandler<GetByIdProductQuery, S
     {
         Product? product = await _productRepository.GetByIdAsync(request.Id);
         ProductViewDto productViewDto = _mapper.Map<ProductViewDto>(product);
-        return ServiceResponse<ProductViewDto>.SuccessDataWithMessage(productViewDto, "Başarılı");
+        return ServiceResponse<ProductViewDto>.SuccessMessageWithData(productViewDto, "Başarılı");
     }
 }
 
