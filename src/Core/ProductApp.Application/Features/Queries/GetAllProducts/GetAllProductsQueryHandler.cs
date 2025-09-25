@@ -24,7 +24,7 @@ public class GetAllProductsQueryHandler : IRequestHandler<GetAllProductsQuery, P
         List<Product> products = await _productRepository.GetAllAsync();
         if (products is null)
         {
-            return PaginatedResponse<List<ProductViewDto>>.ErrorMessageWithPaginatedData(new List<ProductViewDto>(), "Başarısız", 0, request.PageNumber, request.PageSize);
+            return PaginatedResponse<List<ProductViewDto>>.ErrorMessage("Başarısız");
         }
         products.Paginated(request.PageNumber, request.PageSize, out int totalItems, out var paginatedDatas);
         List<ProductViewDto> productViewDtoList = _mapper.Map<List<ProductViewDto>>(paginatedDatas);

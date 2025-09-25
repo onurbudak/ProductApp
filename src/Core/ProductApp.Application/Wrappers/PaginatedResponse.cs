@@ -1,6 +1,6 @@
 ﻿namespace ProductApp.Application.Wrappers;
 
-public class PaginatedResponse<T> : ServiceResponse<T>
+public class PaginatedResponse<T> : ServiceResponse<T> where T : class
 {
     public int TotalItems { get; set; }
     public int PageSize { get; set; }
@@ -40,8 +40,19 @@ public class PaginatedResponse<T> : ServiceResponse<T>
         return new PaginatedResponse<T>(data, false, totalItems, pageNumber, pageSize);
     }
 
-    public static PaginatedResponse<T> ErrorMessageWithPaginatedData(T? data, string message, int totalItems , int pageNumber, int pageSize)
+    public static PaginatedResponse<T> ErrorMessageWithPaginatedData(T? data, string message, int totalItems, int pageNumber, int pageSize)
     {
         return new PaginatedResponse<T>(data, false, message, totalItems, pageNumber, pageSize);
     }
+
+    public static PaginatedResponse<T> Error()
+    {
+        return new PaginatedResponse<T>(null, false, 0, 0, 0);
+    }
+
+    public static PaginatedResponse<T> ErrorMessage(string message)
+    {
+        return new PaginatedResponse<T>(null, false, message, 0, 0, 0);
+    }
+
 }
