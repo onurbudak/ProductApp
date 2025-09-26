@@ -1,7 +1,8 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using System.Net;
+using System.Text;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using ProductApp.Application.Wrappers;
-using System.Net;
 
 namespace ProductApp.Application.Middlewares;
 
@@ -24,9 +25,28 @@ public class ErrorHandlerMiddleware
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "An error occurred: {Message}", ex.Message);
+            string method = httpContext.Request.Method;
+            PathString path = httpContext.Request.Path;
+            string requestBody = await ReadRequestBody(httpContext.Request);
+
+            _logger.LogError(ex, "{Method} {Path} \nBody: {Body} \nMessage: {Message}", method, path, requestBody, ex.Message);
+
             await HandleExceptionAsync(httpContext, ex);
         }
+    }
+
+    private async Task<string> ReadRequestBody(HttpRequest request)
+    {
+        request.Body.Position = 0;
+        using StreamReader reader = new StreamReader(
+            request.Body,
+            encoding: Encoding.UTF8,
+            detectEncodingFromByteOrderMarks: false,
+            leaveOpen: true);
+
+        string body = await reader.ReadToEndAsync();
+        request.Body.Position = 0;
+        return body;
     }
 
     private static Task HandleExceptionAsync(HttpContext httpContext, Exception exception)

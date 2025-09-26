@@ -15,7 +15,7 @@ public class CreateProductCommandHandler : ICommandHandler<CreateProductCommand,
     {
         _productRepository = productRepository;
         _mapper = mapper;
-    }
+    } 
     public async Task<ServiceResponse<bool>> Handle(CreateProductCommand request, CancellationToken cancellationToken)
     {
         Product mappedProduct = _mapper.Map<Product>(request);

@@ -25,7 +25,7 @@ public class UpdateProductCommandHandler : ICommandHandler<UpdateProductCommand,
     }
     public async Task<ServiceResponse<bool>> Handle(UpdateProductCommand request, CancellationToken cancellationToken)
     {
-        _logger.LogInformation("ProductUpdateService Started");
+        _logger.LogInformation("UpdateProductCommand Started");
 
         Product mappedProduct = _mapper.Map<Product>(request);
         Product? product = await _productRepository.UpdateAsync(mappedProduct);

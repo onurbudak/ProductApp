@@ -75,9 +75,9 @@ builder.Services.AddQuartz(q =>
     q.AddTrigger(opts => opts
         .ForJob(jobKey)
         .WithIdentity("ProductMessageTrigger")
-        .StartAt(DateTimeOffset.Now.AddSeconds(300))
+        .StartAt(DateTimeOffset.Now.AddSeconds(30000))
         .WithSimpleSchedule(x => x
-            .WithIntervalInSeconds(120)
+            .WithIntervalInSeconds(12000)
             .RepeatForever()));
 
     // Quartz logging configuration

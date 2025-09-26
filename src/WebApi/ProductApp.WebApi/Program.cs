@@ -66,8 +66,8 @@ var app = builder.Build();
 
 app.UseSerilogRequestLogging();
 
-app.UseErrorHandler();
 app.UseLoggingHandler();
+app.UseErrorHandler();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
