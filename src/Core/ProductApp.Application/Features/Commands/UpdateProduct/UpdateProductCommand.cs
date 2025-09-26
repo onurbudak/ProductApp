@@ -1,9 +1,8 @@
-﻿using MediatR;
-using ProductApp.Application.Wrappers;
+﻿using ProductApp.Application.Messaging;
 
 namespace ProductApp.Application.Features.Commands.UpdateProduct;
 
-public class UpdateProductCommand : IRequest<BaseResponse>
+public class UpdateProductCommand : ICommand<bool>
 {
     public long Id { get; set; }
     public string? Name { get; set; }

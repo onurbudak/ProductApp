@@ -1,9 +1,8 @@
-﻿using MediatR;
-using ProductApp.Application.Wrappers;
+﻿using ProductApp.Application.Messaging;
 
 namespace ProductApp.Application.Features.Commands.DeleteProduct;
 
-public class DeleteProductCommand : IRequest<ServiceResponse<bool>>
+public class DeleteProductCommand : ICommand<bool>
 {
     public long Id { get; set; }
 }

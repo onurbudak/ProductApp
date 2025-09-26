@@ -5,7 +5,7 @@ using ProductApp.Persistence.Context;
 
 namespace ProductApp.Persistence.Repositories;
 
-public class GenericRepositoryAsync<TEntity> : IGenericRepositoryAsync<TEntity> where TEntity : BaseEntity, new()
+public class GenericRepositoryAsync<TEntity> : IGenericRepositoryAsync<TEntity> where TEntity : BaseEntity
 {
     private readonly ApplicationDbContext _dbContext;
 
@@ -16,7 +16,7 @@ public class GenericRepositoryAsync<TEntity> : IGenericRepositoryAsync<TEntity> 
 
     public async Task<List<TEntity>> GetAllAsync() => await _dbContext.Set<TEntity>().Where(e => !e.IsDeleted).ToListAsync();
 
-    public async Task<TEntity?> GetByIdAsync(long id) => await _dbContext.Set<TEntity>().FindAsync(id);
+    public async Task<TEntity?> GetByIdAsync(long id) => await _dbContext.Set<TEntity>().Where(e => !e.IsDeleted).SingleOrDefaultAsync(e => e.Id == id);
 
     public async Task<TEntity> AddAsync(TEntity entity)
     {
@@ -38,7 +38,7 @@ public class GenericRepositoryAsync<TEntity> : IGenericRepositoryAsync<TEntity> 
             _dbContext.Entry(existingEntity).CurrentValues.SetValues(entity);
             existingEntity.UpdateDate = DateTime.Now;
             await _dbContext.SaveChangesAsync();
-        }    
+        }
         return existingEntity;
     }
 
@@ -50,7 +50,7 @@ public class GenericRepositoryAsync<TEntity> : IGenericRepositoryAsync<TEntity> 
             existingEntity.DeleteDate = DateTime.Now;
             existingEntity.IsDeleted = true;
             await _dbContext.SaveChangesAsync();
-        }     
+        }
         return existingEntity;
     }
 }

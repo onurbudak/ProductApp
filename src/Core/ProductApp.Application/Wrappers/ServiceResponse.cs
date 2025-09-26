@@ -4,33 +4,33 @@ public class ServiceResponse<T> : BaseResponse
 {
     public T? Data { get; set; }
 
-    public ServiceResponse(T? data, bool isSuccess) : base(isSuccess)
+    public ServiceResponse(T? data, bool isSuccess, Error? error) : base(isSuccess, error)
     {
         Data = data;
     }
 
-    public ServiceResponse(T? data, bool isSuccess, string message) : base(isSuccess, message)
+    public ServiceResponse(T? data, bool isSuccess, string message, Error? error) : base(isSuccess, message, error)
     {
         Data = data;
     }
 
     public static ServiceResponse<T> SuccessData(T? data)
     {
-        return new ServiceResponse<T>(data, true);
+        return new ServiceResponse<T>(data, true, null);
     }
 
-    public static ServiceResponse<T> SuccessMessageWithData(T? data, string message)
+    public static ServiceResponse<T> SuccessDataWithMessage(T? data, string message)
     {
-        return new ServiceResponse<T>(data, true, message);
+        return new ServiceResponse<T>(data, true, message, null);
     }
 
-    public static ServiceResponse<T> ErrorData(T? data)
+    public static ServiceResponse<T> FailureData(Error error)
     {
-        return new ServiceResponse<T>(data, false);
+        return new ServiceResponse<T>(default, false, error);
     }
 
-    public static ServiceResponse<T> ErrorMessageWithData(T? data, string message)
+    public static ServiceResponse<T> FailureDataWithMessage(string message, Error error)
     {
-        return new ServiceResponse<T>(data, false, message);
+        return new ServiceResponse<T>(default, false, message, error);
     }
 }

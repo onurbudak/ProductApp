@@ -1,9 +1,8 @@
-﻿using MediatR;
-using ProductApp.Application.Wrappers;
+﻿using ProductApp.Application.Messaging;
 
 namespace ProductApp.Application.Features.Commands.CreateProduct;
 
-public class CreateProductCommand : IRequest<ServiceResponse<bool>>
+public class CreateProductCommand : ICommand<bool>
 {
     public string? Name { get; set; }
     public decimal? Value { get; set; }

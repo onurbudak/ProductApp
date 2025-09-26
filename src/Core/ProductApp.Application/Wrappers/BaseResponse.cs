@@ -6,35 +6,39 @@ public class BaseResponse
 
     public bool IsSuccess { get; set; }
 
-    public string Message { get; set; } = string.Empty;
+    public string? Message { get; set; }
 
-    public BaseResponse(bool isSuccess)
+    public Error? Error { get; set; }
+
+    public BaseResponse(bool isSuccess, Error? error)
     {
         IsSuccess = isSuccess;
+        Error = error;
     }
 
-    public BaseResponse(bool isSuccess, string message) : this(isSuccess)
+    public BaseResponse(bool isSuccess, string message, Error? error) : this(isSuccess, error)
     {
         Message = message;
+        Error = error;
     }
 
     public static BaseResponse Success()
     {
-        return new BaseResponse(true);
+        return new BaseResponse(true, null);
     }
 
     public static BaseResponse SuccessMessage(string message)
     {
-        return new BaseResponse(true, message);
+        return new BaseResponse(true, message, null);
     }
 
-    public static BaseResponse Error()
+    public static BaseResponse Failure(Error error)
     {
-        return new BaseResponse(false);
+        return new BaseResponse(false, error);
     }
 
-    public static BaseResponse ErrorMessage(string message)
+    public static BaseResponse FailureMessage(string message, Error error)
     {
-        return new BaseResponse(false, message);
+        return new BaseResponse(false, message, error);
     }
 }
