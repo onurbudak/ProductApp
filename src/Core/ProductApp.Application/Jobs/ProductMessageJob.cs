@@ -1,4 +1,6 @@
 ﻿using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
+using ProductApp.Application.Common;
 using ProductApp.Application.Queues;
 using Quartz;
 
@@ -8,25 +10,29 @@ public class ProductMessageJob : IJob
 {
     private readonly IRabbitMqFactory _rabbitMqFactory;
     private readonly ILogger<ProductMessageJob> _logger;
+    private readonly AppSettings _settings;
 
-    public ProductMessageJob(IRabbitMqFactory rabbitMqFactory, ILogger<ProductMessageJob> logger)
+
+    public ProductMessageJob(IRabbitMqFactory rabbitMqFactory, ILogger<ProductMessageJob> logger, IOptions<AppSettings> options)
     {
-        _logger = logger;
         _rabbitMqFactory = rabbitMqFactory;
+        _logger = logger;
+        _settings = options.Value;
     }
 
     public async Task Execute(IJobExecutionContext context)
     {
         try
         {
-            _logger.LogInformation("ProductMessageJob started");
-            await _rabbitMqFactory.ConsumeAsync("localhost", "product_queue_error");
+            Console.WriteLine($"ProductMessageJob Started");
+            _logger.LogInformation("ProductMessageJob Started");
+            await _rabbitMqFactory.ConsumeAsync(_settings?.RabbitMq?.Host ?? string.Empty, _settings?.RabbitMq?.ProductQueueErrorName ?? string.Empty);
         }
         catch (Exception ex)
         {
-            //Console.WriteLine(ex);
-            _logger.LogError(ex, "Error ProductMessageJob");
-            //throw new Exception("An error occurred during ProductMessageJob execution.");
+            Console.WriteLine($"ProductMessageJob Error : {ex}");
+            _logger.LogError(ex, "ProductMessageJob Error");
+            throw new Exception(ex.Message, ex);
         }
     }
 }

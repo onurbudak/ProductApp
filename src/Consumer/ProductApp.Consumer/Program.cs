@@ -1,30 +1,31 @@
 ﻿using MassTransit;
-using ProductApp.Persistence;
 using ProductApp.Application;
+using ProductApp.Application.Common;
 using ProductApp.Application.Consumers;
 using ProductApp.Application.Jobs;
+using ProductApp.Application.Queues;
+using ProductApp.Persistence;
 using Quartz;
 using Serilog;
-using ProductApp.Application.Queues;
 
 var builder = WebApplication.CreateBuilder(args);
 
-var configuration = builder.Configuration;
+builder.Services.Configure<AppSettings>(builder.Configuration.GetSection("AppSettings"));
+AppSettings? appSettings = builder.Configuration.GetSection("AppSettings").Get<AppSettings>();
 
-var rabbitMqConfig = configuration.GetSection("RabbitMq");
-string host = rabbitMqConfig["host"] ?? string.Empty;
-string username = rabbitMqConfig["username"] ?? string.Empty;
-string password = rabbitMqConfig["password"] ?? string.Empty;
-string productQueueName = rabbitMqConfig["productQueueName"] ?? string.Empty;
-string productQueueErrorName = rabbitMqConfig["productQueueErrorName"] ?? string.Empty;
+string host = appSettings?.RabbitMq?.Host ?? string.Empty;
+string username = appSettings?.RabbitMq?.Username ?? string.Empty;
+string password = appSettings?.RabbitMq?.Password ?? string.Empty;
+string productQueueName = appSettings?.RabbitMq?.ProductQueueName ?? string.Empty;
+string productQueueErrorName = appSettings?.RabbitMq?.ProductQueueErrorName ?? string.Empty;
 
-builder.Host.UseSerilog((_, loggerConfiguration) => loggerConfiguration.WriteTo.Console(formatProvider: null).ReadFrom.Configuration(configuration));
+builder.Host.UseSerilog((_, loggerConfiguration) => loggerConfiguration.WriteTo.Console(formatProvider: null).ReadFrom.Configuration(builder.Configuration));
 
 builder.Services.AddSingleton<IRabbitMqFactory, RabbitMqFactory>();
 //builder.Services.AddSingleton<IJob, ProductMessageJob>();
 
 builder.Services.AddApplicationRegistration();
-builder.Services.AddPersistenceRegistration(configuration);
+builder.Services.AddPersistenceRegistration(builder.Configuration);
 
 builder.Services.AddMassTransit(x =>
 {
@@ -45,7 +46,7 @@ builder.Services.AddMassTransit(x =>
         cfg.ReceiveEndpoint(productQueueName, e =>
         {
             e.ConfigureConsumer<ProductMessageConsumer>(context);
-            e.UseMessageRetry(r => r.Interval(3, TimeSpan.FromSeconds(20)));
+            e.UseMessageRetry(r => r.Interval(3, TimeSpan.FromSeconds(10)));
             e.UseInMemoryOutbox(context);
         });
 
@@ -75,9 +76,9 @@ builder.Services.AddQuartz(q =>
     q.AddTrigger(opts => opts
         .ForJob(jobKey)
         .WithIdentity("ProductMessageTrigger")
-        .StartAt(DateTimeOffset.Now.AddSeconds(30000))
+        .StartAt(DateTimeOffset.Now.AddSeconds(30))
         .WithSimpleSchedule(x => x
-            .WithIntervalInSeconds(12000)
+            .WithIntervalInSeconds(180)
             .RepeatForever()));
 
     // Quartz logging configuration

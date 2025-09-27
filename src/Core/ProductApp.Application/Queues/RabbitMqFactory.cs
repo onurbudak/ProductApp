@@ -16,15 +16,15 @@ public class RabbitMqFactory : IRabbitMqFactory
 
     private async Task<IChannel> ConnectionAsync(string hostName)
     {
-        Console.WriteLine("ConnectionAsync Started ...");
-        _logger.LogInformation("ConnectionAsync Started ...");
+        Console.WriteLine("ConnectionAsync Started");
+        _logger.LogInformation("ConnectionAsync Started");
 
         ConnectionFactory factory = new ConnectionFactory() { HostName = hostName };
         IConnection connection = await factory.CreateConnectionAsync();
         IChannel channel = await connection.CreateChannelAsync();
 
-        Console.WriteLine("ConnectionAsync Finished ...");
-        _logger.LogInformation("ConnectionAsync Finished ...");
+        Console.WriteLine("ConnectionAsync Finished");
+        _logger.LogInformation("ConnectionAsync Finished");
 
         return channel;
     }
@@ -42,22 +42,22 @@ public class RabbitMqFactory : IRabbitMqFactory
 
         Console.WriteLine($"Publish Message : {message}");
         _logger.LogInformation("Publish Message : {Message}", message);
-        Console.WriteLine("PublishAsync Finished ...");
-        _logger.LogInformation("PublishAsync Finished ...");
+        Console.WriteLine("PublishAsync Finished");
+        _logger.LogInformation("PublishAsync Finished");
 
     }
 
     public async Task ConsumeAsync(string hostName, string queue)
     {
-        Console.WriteLine("ConsumeAsync Started ...");
-        _logger.LogInformation("ConsumeAsync Started ...");
+        Console.WriteLine("ConsumeAsync Started");
+        _logger.LogInformation("ConsumeAsync Started");
 
         IChannel channel = await ConnectionAsync(hostName);
         var consumer = new AsyncMessageConsumer(channel, _logger);
         await channel.BasicConsumeAsync(queue: queue, autoAck: false, consumer: consumer);
 
-        Console.WriteLine("ConsumeAsync Finished ...");
-        _logger.LogInformation("ConsumeAsync Finished ...");
+        Console.WriteLine("ConsumeAsync Finished");
+        _logger.LogInformation("ConsumeAsync Finished");
     }
 
     private class AsyncMessageConsumer : IAsyncBasicConsumer
@@ -107,8 +107,8 @@ public class RabbitMqFactory : IRabbitMqFactory
 
         public Task HandleChannelShutdownAsync(object channel, ShutdownEventArgs reason)
         {
-            Console.WriteLine("Consumer Shutdown ...");
-            _logger.LogInformation("Consumer Shutdown ...");
+            Console.WriteLine("Consumer Shutdown");
+            _logger.LogInformation("Consumer Shutdown");
 
             return Task.CompletedTask;
         }

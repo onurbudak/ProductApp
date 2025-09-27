@@ -1,18 +1,22 @@
 ﻿using MassTransit;
 using ProductApp.Application;
+using ProductApp.Application.Common;
 using ProductApp.Persistence;
 using ProductApp.WebApi.Extensions;
 using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
 
-var configuration = builder.Configuration;
+builder.Services.Configure<AppSettings>(builder.Configuration.GetSection("AppSettings"));
+AppSettings? appSettings = builder.Configuration.GetSection("AppSettings").Get<AppSettings>();
 
-var rabbitMqConfig = configuration.GetSection("RabbitMq");
-string host = rabbitMqConfig["host"] ?? string.Empty;
-string username = rabbitMqConfig["username"] ?? string.Empty;
-string password = rabbitMqConfig["password"] ?? string.Empty;
-string productQueueName = rabbitMqConfig["productQueueName"] ?? string.Empty;
+string host = appSettings?.RabbitMq?.Host ?? string.Empty;
+string username = appSettings?.RabbitMq?.Username ?? string.Empty;
+string password = appSettings?.RabbitMq?.Password ?? string.Empty;
+string productQueueName = appSettings?.RabbitMq?.ProductQueueName ?? string.Empty;
+string productQueueErrorName = appSettings?.RabbitMq?.ProductQueueErrorName ?? string.Empty;
+
+builder.Host.UseSerilog((_, loggerConfiguration) => loggerConfiguration.WriteTo.Console(formatProvider: null).ReadFrom.Configuration(builder.Configuration));
 
 builder.Services.AddMassTransit(x =>
 {
@@ -39,8 +43,6 @@ builder.Services.AddMassTransit(x =>
     });
 });
 
-builder.Host.UseSerilog((_, loggerConfiguration) => loggerConfiguration.WriteTo.Console(formatProvider: null).ReadFrom.Configuration(configuration));
-
 builder.Services.AddLogging(configure =>
 {
     configure.AddConsole();
@@ -48,7 +50,7 @@ builder.Services.AddLogging(configure =>
 });
 
 builder.Services.AddApplicationRegistration();
-builder.Services.AddPersistenceRegistration(configuration);
+builder.Services.AddPersistenceRegistration(builder.Configuration);
 
 // Add services to the container.
 

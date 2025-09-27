@@ -27,8 +27,8 @@ public class UpdateProductCommandHandler : ICommandHandler<UpdateProductCommand,
     {
         _logger.LogInformation("UpdateProductCommand Started");
 
-        var status = 9999 + 9999 + 9999 + 9999 + 9999 + 9999 + 9999 + 999999999999;
-        var newStatus = Convert.ToInt16(status);
+        //var status = 9999 + 9999 + 9999 + 9999 + 9999 + 9999 + 9999 + 999999999999;
+        //var newStatus = Convert.ToInt16(status);
 
         Product mappedProduct = _mapper.Map<Product>(request);
         Product? product = await _productRepository.UpdateAsync(mappedProduct);
@@ -38,7 +38,7 @@ public class UpdateProductCommandHandler : ICommandHandler<UpdateProductCommand,
             return ServiceResponse<bool>.FailureDataWithMessage(Messages.RecordIsNotFound, new Error(MessageCode.RecordIsNotFound, Messages.RecordIsNotFound));
         }
 
-        //await _publishEndpoint.Publish(new ProductMessage { Id = product.Id, Status = 1 }, cancellationToken);
+        await _publishEndpoint.Publish(new ProductMessage { Id = product.Id, Status = 1 }, cancellationToken);
 
         return ServiceResponse<bool>.SuccessDataWithMessage(true, Messages.Success);
     }
