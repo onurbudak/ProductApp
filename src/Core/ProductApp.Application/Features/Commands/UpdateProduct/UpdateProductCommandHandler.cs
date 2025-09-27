@@ -38,7 +38,7 @@ public class UpdateProductCommandHandler : ICommandHandler<UpdateProductCommand,
             return ServiceResponse<bool>.FailureDataWithMessage(Messages.RecordIsNotFound, new Error(MessageCode.RecordIsNotFound, Messages.RecordIsNotFound));
         }
 
-        await _publishEndpoint.Publish(new ProductMessage { Id = product.Id, Status = 1 }, cancellationToken);
+        await _publishEndpoint.Publish(new ProductMessage { Id = product.Id, Name = product.Name, Value = product.Value, Quantity = product.Quantity, Status = (short)product.Id }, cancellationToken);
 
         return ServiceResponse<bool>.SuccessDataWithMessage(true, Messages.Success);
     }

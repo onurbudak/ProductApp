@@ -25,18 +25,28 @@ public class ProductMessageConsumer : IConsumer<ProductMessage>
     {
         try
         {
-            Console.WriteLine($"ProductMessageConsumer received Status : {context.Message.Status}");
-            _logger.LogInformation("ProductMessageConsumer received Status : {Status}", context.Message.Status);
+            Console.WriteLine($"ProductMessageConsumer Started");
+            _logger.LogInformation($"ProductMessageConsumer Started");
+
+            ProductMessage productMessage = context.Message;
+
+            Console.WriteLine($"ProductMessageConsumer received Status : {productMessage.Status}");
+            _logger.LogInformation("ProductMessageConsumer received Status : {Status}", productMessage.Status);
 
             Stopwatch timer = Stopwatch.StartNew();
 
             var status = 9999 + 9999 + 9999 + 9999 + 9999 + 9999 + 9999 + 999999999999;
-            context.Message.Status = Convert.ToInt16(status);
+            productMessage.Status = Convert.ToInt16(status);
 
-            Product? mappedProduct = _mapper.Map<Product>(context.Message);
+            productMessage.Status += 1;
+
+            Product? mappedProduct = _mapper.Map<Product>(productMessage);
             await _productRepository.UpdateAsync(mappedProduct);
             await context.NotifyConsumed(timer.Elapsed, TypeMetadataCache<Product>.ShortName);
             timer.Stop();
+
+            Console.WriteLine($"ProductMessageConsumer Finished");
+            _logger.LogInformation($"ProductMessageConsumer Finished");
         }
         catch (Exception ex)
         {
