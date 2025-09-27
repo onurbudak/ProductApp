@@ -13,16 +13,11 @@ AppSettings? appSettings = builder.Configuration.GetSection("AppSettings").Get<A
 string host = appSettings?.RabbitMq?.Host ?? string.Empty;
 string username = appSettings?.RabbitMq?.Username ?? string.Empty;
 string password = appSettings?.RabbitMq?.Password ?? string.Empty;
-string productQueueName = appSettings?.RabbitMq?.ProductQueueName ?? string.Empty;
-string productQueueErrorName = appSettings?.RabbitMq?.ProductQueueErrorName ?? string.Empty;
 
 builder.Host.UseSerilog((_, loggerConfiguration) => loggerConfiguration.WriteTo.Console(formatProvider: null).ReadFrom.Configuration(builder.Configuration));
 
 builder.Services.AddMassTransit(x =>
 {
-    //Consumer'ı ekliyoruz
-    //x.AddConsumer<ProductMessageConsumer>();
-
     // RabbitMQ ile bağlantıyı kuruyoruz
     x.UsingRabbitMq((context, cfg) =>
     {
@@ -32,14 +27,6 @@ builder.Services.AddMassTransit(x =>
             h.Username(username);
             h.Password(password);
         });
-
-        //Consumer'ı dinlemek için endpoint ekliyoruz
-        //cfg.ReceiveEndpoint(productQueueName, e =>
-        //{
-        //    e.ConfigureConsumer<ProductMessageConsumer>(context);
-        //    e.UseMessageRetry(r => r.Interval(3, TimeSpan.FromSeconds(20)));
-        //    e.UseInMemoryOutbox(context);
-        //});
     });
 });
 
@@ -56,10 +43,10 @@ builder.Services.AddPersistenceRegistration(builder.Configuration);
 
 builder.Services
     .AddControllers();
-    //.AddJsonOptions(options =>
-    //{
-    //    options.JsonSerializerOptions.DefaultIgnoreCondition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull;
-    //});
+//.AddJsonOptions(options =>
+//{
+//    options.JsonSerializerOptions.DefaultIgnoreCondition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull;
+//});
 
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();

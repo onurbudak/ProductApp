@@ -52,7 +52,7 @@ public class RabbitMqFactory : IRabbitMqFactory
         Console.WriteLine("ConsumeAsync Started");
         _logger.LogInformation("ConsumeAsync Started");
 
-        IChannel channel = await ConnectionAsync(hostName);
+        IChannel channel = await ConnectionAsync(hostName); 
         var consumer = new AsyncMessageConsumer(channel, _logger);
         await channel.BasicConsumeAsync(queue: queue, autoAck: false, consumer: consumer);
 

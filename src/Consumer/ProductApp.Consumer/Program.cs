@@ -18,6 +18,13 @@ string username = appSettings?.RabbitMq?.Username ?? string.Empty;
 string password = appSettings?.RabbitMq?.Password ?? string.Empty;
 string productQueueName = appSettings?.RabbitMq?.ProductQueueName ?? string.Empty;
 string productQueueErrorName = appSettings?.RabbitMq?.ProductQueueErrorName ?? string.Empty;
+int massTransitRetryCount = appSettings?.MassTransit?.RetryCount ?? 0;
+long massTransitInterval = appSettings?.MassTransit?.Interval ?? 0;
+double quartzStartTime = appSettings?.Quartz?.StartTime ?? 0;
+int quartzInterval = appSettings?.Quartz?.Interval ?? 0;
+int quartzMaxConcurrency = appSettings?.Quartz?.MaxConcurrency ?? 0;
+string quartzJobName = appSettings?.Quartz?.JobName ?? string.Empty;
+string quartzTriggerName = appSettings?.Quartz?.TriggerName ?? string.Empty;
 
 builder.Host.UseSerilog((_, loggerConfiguration) => loggerConfiguration.WriteTo.Console(formatProvider: null).ReadFrom.Configuration(builder.Configuration));
 
@@ -46,7 +53,7 @@ builder.Services.AddMassTransit(x =>
         cfg.ReceiveEndpoint(productQueueName, e =>
         {
             e.ConfigureConsumer<ProductMessageConsumer>(context);
-            e.UseMessageRetry(r => r.Interval(3, TimeSpan.FromSeconds(10)));
+            e.UseMessageRetry(r => r.Interval(massTransitRetryCount, TimeSpan.FromSeconds(massTransitInterval)));
             e.UseInMemoryOutbox(context);
         });
 
@@ -69,22 +76,22 @@ builder.Services.AddLogging(configure =>
 // Add Quartz and configure the job and scheduler
 builder.Services.AddQuartz(q =>
 {
-    var jobKey = new JobKey("ProductMessageJob");
+    var jobKey = new JobKey(quartzJobName);
 
     q.AddJob<ProductMessageJob>(opts => opts.WithIdentity(jobKey));
 
     q.AddTrigger(opts => opts
         .ForJob(jobKey)
-        .WithIdentity("ProductMessageTrigger")
-        .StartAt(DateTimeOffset.Now.AddSeconds(30))
+        .WithIdentity(quartzTriggerName)
+        .StartAt(DateTimeOffset.Now.AddSeconds(quartzStartTime))
         .WithSimpleSchedule(x => x
-            .WithIntervalInSeconds(180)
+            .WithIntervalInSeconds(quartzInterval)
             .RepeatForever()));
 
     // Quartz logging configuration
     q.UseSimpleTypeLoader();
     q.UseInMemoryStore();
-    q.UseDefaultThreadPool(tp => tp.MaxConcurrency = 10);
+    q.UseDefaultThreadPool(tp => tp.MaxConcurrency = quartzMaxConcurrency);
 });
 
 builder.Services.AddQuartzHostedService(q => q.WaitForJobsToComplete = true);
