@@ -1,7 +1,7 @@
 ﻿using MassTransit;
 using ProductApp.Application;
-using ProductApp.Application.Extensions;
 using ProductApp.Persistence;
+using ProductApp.WebApi.Extensions;
 using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -65,7 +65,6 @@ builder.Services.AddOpenApi();
 var app = builder.Build();
 
 app.UseSerilogRequestLogging();
-
 app.UseLoggingHandler();
 app.UseErrorHandler();
 

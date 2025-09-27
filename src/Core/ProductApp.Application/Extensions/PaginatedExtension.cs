@@ -2,7 +2,7 @@
 
 public static class PaginatedExtension
 {
-    public static IEnumerable<T>? Paginated<T>(this IEnumerable<T> data, int pageNumber, int pageSize, out int totalItems, out List<T>? resultData)
+    public static IEnumerable<T>? Paginated<T>(this IEnumerable<T> data, int pageNumber, int pageSize, out int totalItems, out List<T>? paginatedDatas)
     {
         totalItems = data.Count();
         if (pageNumber == 0)
@@ -13,7 +13,7 @@ public static class PaginatedExtension
         {
             pageSize = int.MaxValue;
         }
-        resultData = data?.Skip((pageNumber - 1) * pageSize).Take(pageSize).ToList();
-        return resultData;
+        paginatedDatas = data?.Skip((pageNumber - 1) * pageSize).Take(pageSize).ToList();
+        return paginatedDatas;
     }
 }

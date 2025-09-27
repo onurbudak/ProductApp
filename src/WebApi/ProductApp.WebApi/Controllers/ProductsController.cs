@@ -20,7 +20,7 @@ public class ProductsController : ControllerBase
     private readonly IMediator _mediator;
 
     /// <summary>
-    /// 
+    /// ProductsController
     /// </summary>
     /// <param name="mediator"></param>
     public ProductsController(IMediator mediator)
@@ -29,7 +29,7 @@ public class ProductsController : ControllerBase
     }
 
     /// <summary>
-    /// GetList
+    /// GetAll
     /// </summary>
     /// <param name="request"></param>
     /// <returns></returns>
@@ -37,7 +37,7 @@ public class ProductsController : ControllerBase
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(PaginatedResponse<List<ProductViewDto>>))]
     [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(PaginatedResponse<List<ProductViewDto>>))]
     [HttpGet]
-    public async Task<IActionResult> GetList([FromQuery] GetAllProductsQuery request)
+    public async Task<IActionResult> GetAll([FromQuery] GetAllProductsQuery request)
     {
         var response = await _mediator.Send(request);
         return response.IsSuccess ? Ok(response) : BadRequest(response);
@@ -49,8 +49,8 @@ public class ProductsController : ControllerBase
     /// <param name="request"></param>
     /// <returns></returns>
     [Produces("application/json", "text/plain")]
-    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(PaginatedResponse<List<ProductViewDto>>))]
-    [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(PaginatedResponse<List<ProductViewDto>>))]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ServiceResponse<ProductViewDto>))]
+    [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ServiceResponse<ProductViewDto>))]
     [HttpGet("{id}")]
     public async Task<IActionResult> GetById([FromRoute] GetByIdProductQuery request)
     {
@@ -64,8 +64,8 @@ public class ProductsController : ControllerBase
     /// <param name="request"></param>
     /// <returns></returns>
     [Produces("application/json", "text/plain")]
-    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(PaginatedResponse<List<ProductViewDto>>))]
-    [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(PaginatedResponse<List<ProductViewDto>>))]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ServiceResponse<bool>))]
+    [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ServiceResponse<bool>))]
     [HttpPost]
     public async Task<IActionResult> Add([FromBody] CreateProductCommand request)
     {
@@ -79,8 +79,8 @@ public class ProductsController : ControllerBase
     /// <param name="request"></param>
     /// <returns></returns>
     [Produces("application/json", "text/plain")]
-    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(PaginatedResponse<List<ProductViewDto>>))]
-    [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(PaginatedResponse<List<ProductViewDto>>))]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ServiceResponse<bool>))]
+    [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ServiceResponse<bool>))]
     [HttpPut]
     public async Task<IActionResult> Update([FromBody] UpdateProductCommand request)
     {
@@ -94,8 +94,8 @@ public class ProductsController : ControllerBase
     /// <param name="request"></param>
     /// <returns></returns>
     [Produces("application/json", "text/plain")]
-    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(PaginatedResponse<List<ProductViewDto>>))]
-    [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(PaginatedResponse<List<ProductViewDto>>))]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ServiceResponse<bool>))]
+    [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ServiceResponse<bool>))]
     [HttpDelete]
     public async Task<IActionResult> Delete([FromBody] DeleteProductCommand request)
     {

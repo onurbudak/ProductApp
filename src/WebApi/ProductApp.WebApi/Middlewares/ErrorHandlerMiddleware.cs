@@ -1,10 +1,8 @@
 ﻿using System.Net;
 using System.Text;
-using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.Logging;
 using ProductApp.Application.Wrappers;
 
-namespace ProductApp.Application.Middlewares;
+namespace ProductApp.WebApi.Middlewares;
 
 public class ErrorHandlerMiddleware
 {
@@ -28,14 +26,12 @@ public class ErrorHandlerMiddleware
             string method = httpContext.Request.Method;
             PathString path = httpContext.Request.Path;
             string requestBody = await ReadRequestBody(httpContext.Request);
-
             _logger.LogError(ex, "{Method} {Path} \nBody: {Body} \nMessage: {Message}", method, path, requestBody, ex.Message);
-
             await HandleExceptionAsync(httpContext, ex);
         }
     }
 
-    private async Task<string> ReadRequestBody(HttpRequest request)
+    private static async Task<string> ReadRequestBody(HttpRequest request)
     {
         request.Body.Position = 0;
         using StreamReader reader = new StreamReader(
@@ -43,7 +39,6 @@ public class ErrorHandlerMiddleware
             encoding: Encoding.UTF8,
             detectEncodingFromByteOrderMarks: false,
             leaveOpen: true);
-
         string body = await reader.ReadToEndAsync();
         request.Body.Position = 0;
         return body;
@@ -53,7 +48,6 @@ public class ErrorHandlerMiddleware
     {
         httpContext.Response.ContentType = "application/json";
         httpContext.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
-
         return httpContext.Response.WriteAsync(new ErrorResponse
         {
             StatusCode = httpContext.Response.StatusCode,

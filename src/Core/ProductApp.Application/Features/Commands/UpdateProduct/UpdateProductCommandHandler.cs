@@ -13,15 +13,15 @@ public class UpdateProductCommandHandler : ICommandHandler<UpdateProductCommand,
 {
     private readonly IProductRepository _productRepository;
     private readonly IMapper _mapper;
-    private readonly IPublishEndpoint _publishEndpoint;
     private readonly ILogger<UpdateProductCommandHandler> _logger;
+    private readonly IPublishEndpoint _publishEndpoint;
 
-    public UpdateProductCommandHandler(IProductRepository productRepository, IMapper mapper, IPublishEndpoint publishEndpoint, ILogger<UpdateProductCommandHandler> logger)
+    public UpdateProductCommandHandler(IProductRepository productRepository, IMapper mapper, ILogger<UpdateProductCommandHandler> logger, IPublishEndpoint publishEndpoint)
     {
         _productRepository = productRepository;
         _mapper = mapper;
-        _publishEndpoint = publishEndpoint;
         _logger = logger;
+        _publishEndpoint = publishEndpoint;
     }
     public async Task<ServiceResponse<bool>> Handle(UpdateProductCommand request, CancellationToken cancellationToken)
     {

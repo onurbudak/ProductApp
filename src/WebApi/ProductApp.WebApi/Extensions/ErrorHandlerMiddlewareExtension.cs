@@ -1,7 +1,6 @@
-﻿using Microsoft.AspNetCore.Builder;
-using ProductApp.Application.Middlewares;
+﻿using ProductApp.WebApi.Middlewares;
 
-namespace ProductApp.Application.Extensions;
+namespace ProductApp.WebApi.Extensions;
 
 public static class ErrorHandlerMiddlewareExtension
 {
