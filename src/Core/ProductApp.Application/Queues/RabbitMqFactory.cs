@@ -86,9 +86,9 @@ public class RabbitMqFactory : IRabbitMqFactory
             _logger.LogInformation("Received Message: {Message}", message);
 
             BasicProperties basicProperties = new BasicProperties();
-            await Channel.BasicPublishAsync(exchange: "", routingKey: _settings?.RabbitMq?.ProductQueueName ?? string.Empty, mandatory: true, basicProperties: basicProperties, body: body);
+            await Channel.BasicPublishAsync(exchange: "", routingKey: _settings?.RabbitMq?.ProductQueueName ?? string.Empty, mandatory: true, basicProperties: basicProperties, body: body, cancellationToken);
 
-            await Channel.BasicAckAsync(deliveryTag, false);
+            await Channel.BasicAckAsync(deliveryTag, false, cancellationToken);
         }
 
         public Task HandleBasicConsumeOkAsync(string consumerTag, CancellationToken cancellationToken = default)

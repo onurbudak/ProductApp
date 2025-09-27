@@ -28,9 +28,11 @@ public class ProductMessageConsumer : IConsumer<ProductMessage>
             Console.WriteLine($"ProductMessageConsumer received Status : {context.Message.Status}");
             _logger.LogInformation("ProductMessageConsumer received Status : {Status}", context.Message.Status);
 
-            Stopwatch timer = Stopwatch.StartNew();        
+            Stopwatch timer = Stopwatch.StartNew();
+
             var status = 9999 + 9999 + 9999 + 9999 + 9999 + 9999 + 9999 + 999999999999;
             context.Message.Status = Convert.ToInt16(status);
+
             Product? mappedProduct = _mapper.Map<Product>(context.Message);
             await _productRepository.UpdateAsync(mappedProduct);
             await context.NotifyConsumed(timer.Elapsed, TypeMetadataCache<Product>.ShortName);
