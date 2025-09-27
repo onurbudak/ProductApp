@@ -1,5 +1,8 @@
 ﻿using System.Text;
+using System.Threading.Channels;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
+using ProductApp.Application.Common;
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
 
@@ -8,10 +11,12 @@ namespace ProductApp.Application.Queues;
 public class RabbitMqFactory : IRabbitMqFactory
 {
     private readonly ILogger<RabbitMqFactory> _logger;
+    private readonly AppSettings _settings;
 
-    public RabbitMqFactory(ILogger<RabbitMqFactory> logger)
+    public RabbitMqFactory(ILogger<RabbitMqFactory> logger, IOptions<AppSettings> options)
     {
         _logger = logger;
+        _settings = options.Value;
     }
 
     private async Task<IChannel> ConnectionAsync(string hostName)
@@ -52,8 +57,8 @@ public class RabbitMqFactory : IRabbitMqFactory
         Console.WriteLine("ConsumeAsync Started");
         _logger.LogInformation("ConsumeAsync Started");
 
-        IChannel channel = await ConnectionAsync(hostName); 
-        var consumer = new AsyncMessageConsumer(channel, _logger);
+        IChannel channel = await ConnectionAsync(hostName);
+        var consumer = new AsyncMessageConsumer(channel, _logger, _settings);
         await channel.BasicConsumeAsync(queue: queue, autoAck: false, consumer: consumer);
 
         Console.WriteLine("ConsumeAsync Finished");
@@ -64,11 +69,13 @@ public class RabbitMqFactory : IRabbitMqFactory
     {
         public IChannel Channel { get; set; }
         private readonly ILogger<RabbitMqFactory> _logger;
+        private readonly AppSettings _settings;
 
-        public AsyncMessageConsumer(IChannel channel, ILogger<RabbitMqFactory> logger)
+        public AsyncMessageConsumer(IChannel channel, ILogger<RabbitMqFactory> logger, AppSettings appSettings)
         {
             Channel = channel;
             _logger = logger;
+            _settings = appSettings;
         }
 
         public async Task HandleBasicDeliverAsync(string consumerTag, ulong deliveryTag, bool redelivered, string exchange, string routingKey, IReadOnlyBasicProperties properties, ReadOnlyMemory<byte> body, CancellationToken cancellationToken = default)
@@ -77,6 +84,9 @@ public class RabbitMqFactory : IRabbitMqFactory
 
             Console.WriteLine("Received Message: {message}");
             _logger.LogInformation("Received Message: {Message}", message);
+
+            BasicProperties basicProperties = new BasicProperties();
+            await Channel.BasicPublishAsync(exchange: "", routingKey: _settings?.RabbitMq?.ProductQueueName ?? string.Empty, mandatory: true, basicProperties: basicProperties, body: body);
 
             await Channel.BasicAckAsync(deliveryTag, false);
         }
