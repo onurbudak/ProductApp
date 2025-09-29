@@ -1,6 +1,6 @@
 ﻿using ProductApp.Application.Messaging;
 
-namespace ProductApp.Application.Features.Commands.UpdateProduct;
+namespace ProductApp.Application.Features.Commands.Products.UpdateProduct;
 
 public class UpdateProductCommand : ICommand<bool>
 {

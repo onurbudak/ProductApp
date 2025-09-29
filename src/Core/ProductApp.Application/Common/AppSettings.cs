@@ -5,6 +5,7 @@ public class AppSettings
     public RabbitMq? RabbitMq { get; set; }
     public Quartz? Quartz { get; set; }
     public MassTransit? MassTransit { get; set; }
+    public JwtSettings? JwtSettings { get; set; }
 }
 
 public class RabbitMq
@@ -29,4 +30,13 @@ public class MassTransit
 {
     public int RetryCount { get; set; }
     public long Interval { get; set; }
+}
+
+public class JwtSettings
+{
+    public string? SecretKey { get; set; }
+    public string? Issuer { get; set; }
+    public string? Audience { get; set; }
+    public double TokenExpirationMinutes { get; set; }
+    public double RefreshTokenExpirationMinutes { get; set; }
 }

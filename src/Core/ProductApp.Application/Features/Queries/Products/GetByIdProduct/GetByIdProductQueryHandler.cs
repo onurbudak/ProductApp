@@ -5,7 +5,7 @@ using ProductApp.Application.Messaging;
 using ProductApp.Application.Wrappers;
 using ProductApp.Domain.Entities;
 
-namespace ProductApp.Application.Features.Queries.GetByIdProduct;
+namespace ProductApp.Application.Features.Queries.Products.GetByIdProduct;
 
 public class GetByIdProductQueryHandler : IQueryHandler<GetByIdProductQuery, ProductViewDto>
 {

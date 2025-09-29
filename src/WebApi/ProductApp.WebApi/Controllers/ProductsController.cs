@@ -1,11 +1,12 @@
 ﻿using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using ProductApp.Application.Dto;
-using ProductApp.Application.Features.Commands.CreateProduct;
-using ProductApp.Application.Features.Commands.DeleteProduct;
-using ProductApp.Application.Features.Commands.UpdateProduct;
-using ProductApp.Application.Features.Queries.GetAllProducts;
-using ProductApp.Application.Features.Queries.GetByIdProduct;
+using ProductApp.Application.Features.Commands.Products.CreateProduct;
+using ProductApp.Application.Features.Commands.Products.DeleteProduct;
+using ProductApp.Application.Features.Commands.Products.UpdateProduct;
+using ProductApp.Application.Features.Queries.Products.GetAllProducts;
+using ProductApp.Application.Features.Queries.Products.GetByIdProduct;
 using ProductApp.Application.Wrappers;
 
 namespace ProductApp.WebApi.Controllers;
@@ -37,6 +38,7 @@ public class ProductsController : ControllerBase
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(PaginatedResponse<List<ProductViewDto>>))]
     [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(PaginatedResponse<List<ProductViewDto>>))]
     [HttpGet]
+    [Authorize]
     public async Task<IActionResult> GetAll([FromQuery] GetAllProductsQuery request)
     {
         var response = await _mediator.Send(request);

@@ -4,7 +4,7 @@ using ProductApp.Application.Messaging;
 using ProductApp.Application.Wrappers;
 using ProductApp.Domain.Entities;
 
-namespace ProductApp.Application.Features.Commands.DeleteProduct;
+namespace ProductApp.Application.Features.Commands.Products.DeleteProduct;
 
 public class DeleteProductCommandHandler : ICommandHandler<DeleteProductCommand, bool>
 {

@@ -1,6 +1,6 @@
 ﻿using ProductApp.Application.Messaging;
 
-namespace ProductApp.Application.Features.Commands.DeleteProduct;
+namespace ProductApp.Application.Features.Commands.Products.DeleteProduct;
 
 public class DeleteProductCommand : ICommand<bool>
 {

@@ -1,6 +1,6 @@
 ﻿using ProductApp.Application.Messaging;
 
-namespace ProductApp.Application.Features.Commands.CreateProduct;
+namespace ProductApp.Application.Features.Commands.Products.CreateProduct;
 
 public class CreateProductCommand : ICommand<bool>
 {

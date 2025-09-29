@@ -1,9 +1,9 @@
 ﻿using AutoMapper;
 using ProductApp.Application.Common;
 using ProductApp.Application.Dto;
-using ProductApp.Application.Features.Commands.CreateProduct;
-using ProductApp.Application.Features.Commands.DeleteProduct;
-using ProductApp.Application.Features.Commands.UpdateProduct;
+using ProductApp.Application.Features.Commands.Products.CreateProduct;
+using ProductApp.Application.Features.Commands.Products.DeleteProduct;
+using ProductApp.Application.Features.Commands.Products.UpdateProduct;
 using ProductApp.Domain.Entities;
 
 namespace ProductApp.Application.Mapping;

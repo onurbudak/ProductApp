@@ -14,5 +14,10 @@ public static class ServiceRegistration
         //services.AddDbContext<ApplicationDbContext>(opt => opt.UseInMemoryDatabase("memoryDb"));
         services.AddDbContext<ApplicationDbContext>(opt => opt.UseSqlServer(configuration.GetConnectionString("SqlDb")));
         services.AddTransient<IProductRepository, ProductRepository>();
+        services.AddTransient<IUserRepository, UserRepository>();
+        services.AddTransient<IUserOperationClaimRepository, UserOperationClaimRepository>();
+        services.AddTransient<IRefreshTokenRepository, RefreshTokenRepository>();
+        services.AddTransient<IOperationClaimRepository, OperationClaimRepository>();
+
     }
 }

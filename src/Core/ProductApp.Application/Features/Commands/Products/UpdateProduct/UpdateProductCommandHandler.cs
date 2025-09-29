@@ -7,7 +7,7 @@ using ProductApp.Application.Messaging;
 using ProductApp.Application.Wrappers;
 using ProductApp.Domain.Entities;
 
-namespace ProductApp.Application.Features.Commands.UpdateProduct;
+namespace ProductApp.Application.Features.Commands.Products.UpdateProduct;
 
 public class UpdateProductCommandHandler : ICommandHandler<UpdateProductCommand, bool>
 {
