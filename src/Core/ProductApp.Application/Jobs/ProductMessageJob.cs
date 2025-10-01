@@ -1,7 +1,7 @@
 ﻿using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using ProductApp.Application.Common;
-using ProductApp.Application.Queues;
+using ProductApp.Application.Interfaces.Queues;
 using Quartz;
 
 namespace ProductApp.Application.Jobs;

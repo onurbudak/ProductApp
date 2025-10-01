@@ -1,4 +1,4 @@
-﻿using ProductApp.Application.Messaging;
+﻿using ProductApp.Application.Interfaces.Messages;
 using ProductApp.Domain.Dto;
 
 namespace ProductApp.Application.Features.Queries.Products.GetAllWithFilterProducts;
@@ -10,5 +10,5 @@ public class GetAllWithFilterProductsQuery : IPaginatedQuery<List<ProductViewDto
     public string? Name { get; set; }
     public decimal? Value { get; set; }
     public long? Quantity { get; set; }
-    public short Status { get; set; }
+    public short? Status { get; set; }
 }

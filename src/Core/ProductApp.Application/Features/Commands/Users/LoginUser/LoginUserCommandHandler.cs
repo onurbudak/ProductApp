@@ -1,6 +1,7 @@
-﻿using ProductApp.Application.Helpers;
-using ProductApp.Application.Interfaces.Repository;
-using ProductApp.Application.Messaging;
+﻿using ProductApp.Application.Common;
+using ProductApp.Application.Helpers;
+using ProductApp.Application.Interfaces.Messages;
+using ProductApp.Application.Interfaces.Repositories;
 using ProductApp.Application.Services;
 using ProductApp.Application.Wrappers;
 using ProductApp.Domain.Entities;

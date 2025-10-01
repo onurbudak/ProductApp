@@ -1,17 +1,18 @@
 ﻿using AutoMapper;
-using ProductApp.Application.Interfaces.Repository;
-using ProductApp.Application.Messaging;
+using ProductApp.Application.Common;
+using ProductApp.Application.Interfaces.Messages;
+using ProductApp.Application.Interfaces.Repositories;
 using ProductApp.Application.Wrappers;
 using ProductApp.Domain.Entities;
 
 namespace ProductApp.Application.Features.Commands.Users.CreateUser;
 
-public class CreateUserCommandHandler : ICommandHandler<CreateUserCommand, bool>
+public class CreateOperationClaimCommandHandler : ICommandHandler<CreateUserCommand, bool>
 {
     private readonly IUserRepository _userRepository;
     private readonly IMapper _mapper;
 
-    public CreateUserCommandHandler(IUserRepository userRepository, IMapper mapper)
+    public CreateOperationClaimCommandHandler(IUserRepository userRepository, IMapper mapper)
     {
         _userRepository = userRepository;
         _mapper = mapper;

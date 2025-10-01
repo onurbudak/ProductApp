@@ -1,4 +1,4 @@
-﻿using ProductApp.Application.Interfaces.Repository;
+﻿using ProductApp.Application.Interfaces.Repositories;
 using ProductApp.Domain.Entities;
 using ProductApp.Persistence.Context;
 

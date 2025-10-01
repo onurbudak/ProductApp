@@ -1,4 +1,4 @@
-﻿using ProductApp.Application.Messaging;
+﻿using ProductApp.Application.Interfaces.Messages;
 using ProductApp.Domain.Dto;
 
 namespace ProductApp.Application.Features.Queries.Products.GetAllProducts;

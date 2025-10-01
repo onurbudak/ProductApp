@@ -1,4 +1,6 @@
-﻿public static class Messages
+﻿namespace ProductApp.Application.Common;
+
+public static class Messages
 {
     public const string Success = "Başarılı";
     public const string Error = "Hatalı";

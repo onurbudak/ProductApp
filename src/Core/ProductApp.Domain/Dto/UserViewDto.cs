@@ -3,8 +3,8 @@
 public class UserViewDto
 {
     public long Id { get; set; }
-    public string? Name { get; set; }
-    public decimal? Value { get; set; }
-    public long? Quantity { get; set; }
-    public short Status { get; set; }
+    public string Name { get; set; }
+    public string SurName { get; set; }
+    public string Email { get; set; }
+    public string UserName { get; set; }
 }

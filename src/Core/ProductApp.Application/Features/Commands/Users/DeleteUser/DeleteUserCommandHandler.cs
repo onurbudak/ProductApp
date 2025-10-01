@@ -1,17 +1,18 @@
 ﻿using AutoMapper;
-using ProductApp.Application.Interfaces.Repository;
-using ProductApp.Application.Messaging;
+using ProductApp.Application.Common;
+using ProductApp.Application.Interfaces.Messages;
+using ProductApp.Application.Interfaces.Repositories;
 using ProductApp.Application.Wrappers;
 using ProductApp.Domain.Entities;
 
 namespace ProductApp.Application.Features.Commands.Users.DeleteUser;
 
-public class DeleteUserCommandHandler : ICommandHandler<DeleteUserCommand, bool>
+public class DeleteOperationClaimCommandHandler : ICommandHandler<DeleteUserCommand, bool>
 {
     private readonly IUserRepository _userRepository;
     private readonly IMapper _mapper;
 
-    public DeleteUserCommandHandler(IUserRepository userRepository, IMapper mapper)
+    public DeleteOperationClaimCommandHandler(IUserRepository userRepository, IMapper mapper)
     {
         _userRepository = userRepository;
         _mapper = mapper;

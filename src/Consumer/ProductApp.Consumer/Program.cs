@@ -2,6 +2,7 @@
 using ProductApp.Application;
 using ProductApp.Application.Common;
 using ProductApp.Application.Consumers;
+using ProductApp.Application.Interfaces.Queues;
 using ProductApp.Application.Jobs;
 using ProductApp.Application.Queues;
 using ProductApp.Persistence;

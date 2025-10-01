@@ -1,8 +1,7 @@
 ﻿using System.Linq.Expressions;
 using Microsoft.EntityFrameworkCore;
-using ProductApp.Application.Interfaces.Repository;
+using ProductApp.Application.Interfaces.Repositories;
 using ProductApp.Domain.Common;
-using ProductApp.Domain.Entities;
 using ProductApp.Persistence.Context;
 
 namespace ProductApp.Persistence.Repositories;

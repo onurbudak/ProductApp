@@ -1,9 +1,8 @@
 ﻿using System.Reflection;
 using MediatR;
 using Microsoft.Extensions.DependencyInjection;
-using ProductApp.Application.Filtering;
-using ProductApp.Application.Interfaces.Filtering;
-using ProductApp.Application.Interfaces.Repository;
+using ProductApp.Application.Filters;
+using ProductApp.Application.Interfaces.Filters;
 using ProductApp.Application.Services;
 using ProductApp.Domain.Entities;
 
@@ -19,5 +18,9 @@ public static class ServiceRegistration
         services.AddMediatR(assembly);
         services.AddScoped<ITokenService, TokenService>();
         services.AddScoped<IFilterService<Product>, DynamicLinqFilterService<Product>>();
+        services.AddScoped<IFilterService<User>, DynamicLinqFilterService<User>>();
+        services.AddScoped<IFilterService<UserOperationClaim>, DynamicLinqFilterService<UserOperationClaim>>();
+        services.AddScoped<IFilterService<OperationClaim>, DynamicLinqFilterService<OperationClaim>>();
+        services.AddScoped<IFilterService<RefreshToken>, DynamicLinqFilterService<RefreshToken>>();
     }
 }

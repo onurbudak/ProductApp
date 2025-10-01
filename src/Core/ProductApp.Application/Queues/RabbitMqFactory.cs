@@ -3,6 +3,7 @@ using System.Threading.Channels;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using ProductApp.Application.Common;
+using ProductApp.Application.Interfaces.Queues;
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
 

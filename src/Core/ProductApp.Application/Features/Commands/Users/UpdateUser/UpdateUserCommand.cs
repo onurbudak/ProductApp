@@ -1,4 +1,4 @@
-﻿using ProductApp.Application.Messaging;
+﻿using ProductApp.Application.Interfaces.Messages;
 
 namespace ProductApp.Application.Features.Commands.Users.UpdateUser;
 

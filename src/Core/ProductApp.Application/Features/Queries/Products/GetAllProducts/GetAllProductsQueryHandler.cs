@@ -1,7 +1,8 @@
 ﻿using AutoMapper;
+using ProductApp.Application.Common;
 using ProductApp.Application.Extensions;
-using ProductApp.Application.Interfaces.Repository;
-using ProductApp.Application.Messaging;
+using ProductApp.Application.Interfaces.Messages;
+using ProductApp.Application.Interfaces.Repositories;
 using ProductApp.Application.Wrappers;
 using ProductApp.Domain.Dto;
 using ProductApp.Domain.Entities;

@@ -1,9 +1,10 @@
 ﻿using AutoMapper;
+using ProductApp.Application.Common;
 using ProductApp.Application.Extensions;
-using ProductApp.Application.Filtering;
-using ProductApp.Application.Interfaces.Filtering;
-using ProductApp.Application.Interfaces.Repository;
-using ProductApp.Application.Messaging;
+using ProductApp.Application.Filters;
+using ProductApp.Application.Interfaces.Filters;
+using ProductApp.Application.Interfaces.Messages;
+using ProductApp.Application.Interfaces.Repositories;
 using ProductApp.Application.Wrappers;
 using ProductApp.Domain.Dto;
 using ProductApp.Domain.Entities;
@@ -16,10 +17,7 @@ public class GetAllWithFilterProductsQueryHandler : IPaginatedQueryHandler<GetAl
     private readonly IMapper _mapper;
     private readonly IFilterService<Product> _filterService;
 
-    public GetAllWithFilterProductsQueryHandler(
-        IProductRepository productRepository,
-        IMapper mapper,
-        IFilterService<Product> filterService)
+    public GetAllWithFilterProductsQueryHandler(IProductRepository productRepository, IMapper mapper, IFilterService<Product> filterService)
     {
         _productRepository = productRepository;
         _mapper = mapper;
@@ -41,8 +39,8 @@ public class GetAllWithFilterProductsQueryHandler : IPaginatedQueryHandler<GetAl
         if (request.Quantity.HasValue)
             filters.Add(new FilterCriteria { Field = "Quantity", Operator = "==", Value = request.Quantity.Value });
 
-        if (request.Status != 0)
-            filters.Add(new FilterCriteria { Field = "Status", Operator = "==", Value = request.Status });
+        if (request.Status.HasValue)
+            filters.Add(new FilterCriteria { Field = "Status", Operator = "==", Value = request.Status.Value });
 
         query = _filterService.ApplyFilters(query, filters);
 

@@ -1,4 +1,4 @@
-﻿using ProductApp.Application.Messaging;
+﻿using ProductApp.Application.Interfaces.Messages;
 using ProductApp.Application.Services;
 
 namespace ProductApp.Application.Features.Commands.Users.LoginUser;

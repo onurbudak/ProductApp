@@ -1,8 +1,9 @@
 ﻿using AutoMapper;
 using MassTransit;
 using Microsoft.Extensions.Logging;
-using ProductApp.Application.Interfaces.Repository;
-using ProductApp.Application.Messaging;
+using ProductApp.Application.Common;
+using ProductApp.Application.Interfaces.Messages;
+using ProductApp.Application.Interfaces.Repositories;
 using ProductApp.Application.Wrappers;
 using ProductApp.Domain.Entities;
 
