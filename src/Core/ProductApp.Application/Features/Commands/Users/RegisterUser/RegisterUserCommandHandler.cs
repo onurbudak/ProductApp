@@ -19,9 +19,9 @@ public class RegisterUserCommandHandler : ICommandHandler<RegisterUserCommand, b
 
     public async Task<ServiceResponse<bool>> Handle(RegisterUserCommand request, CancellationToken cancellationToken)
     {
-        List<User> users = await _userRepository.GetAllAsync();
+        List<User> users = await _userRepository.GetAllWithFilterAsync(e => e.UserName == request.UserName && e.Email == request.Email);
 
-        if (users.Any(u => u.UserName == request.UserName))
+        if (users.Any())
             throw new InvalidOperationException("Username already exists");
 
         var user = new User

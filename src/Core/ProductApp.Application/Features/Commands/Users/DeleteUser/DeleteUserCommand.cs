@@ -1,6 +1,6 @@
 ﻿using ProductApp.Application.Messaging;
 
-namespace ProductApp.Application.Features.Commands.Products.DeleteProduct;
+namespace ProductApp.Application.Features.Commands.Users.DeleteUser;
 
 public class DeleteUserCommand : ICommand<bool>
 {

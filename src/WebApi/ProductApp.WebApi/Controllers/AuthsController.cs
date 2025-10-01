@@ -9,19 +9,19 @@ using ProductApp.Application.Wrappers;
 namespace ProductApp.WebApi.Controllers;
 
 /// <summary>
-/// UsersController
+/// AuthsController
 /// </summary>
 [Route("api/[controller]")]
 [ApiController]
-public class UsersController : ControllerBase
+public class AuthsController : ControllerBase
 {
     private readonly IMediator _mediator;
 
     /// <summary>
-    /// UsersController
+    /// AuthsController
     /// </summary>
     /// <param name="mediator"></param>
-    public UsersController(IMediator mediator)
+    public AuthsController(IMediator mediator)
     {
         _mediator = mediator;
     }

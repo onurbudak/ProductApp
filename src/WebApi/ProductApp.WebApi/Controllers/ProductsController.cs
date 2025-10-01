@@ -1,15 +1,14 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using ProductApp.Application.Dto;
 using ProductApp.Application.Features.Commands.Products.CreateProduct;
 using ProductApp.Application.Features.Commands.Products.DeleteProduct;
 using ProductApp.Application.Features.Commands.Products.UpdateProduct;
 using ProductApp.Application.Features.Queries.Products.GetAllProducts;
 using ProductApp.Application.Features.Queries.Products.GetByIdProduct;
 using ProductApp.Application.Features.Queries.Products.GetAllWithFilterProducts;
-using ProductApp.Application.Features.Queries.Products.GetByIdWithFilterProduct;
 using ProductApp.Application.Wrappers;
+using ProductApp.Domain.Dto;
 
 namespace ProductApp.WebApi.Controllers;
 
@@ -89,7 +88,7 @@ public class ProductsController : ControllerBase
     [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ServiceResponse<bool>))]
     [HttpPost("[action]")]
     [Authorize]
-    public async Task<IActionResult> Add([FromBody] CreateProductCommand request)
+    public async Task<IActionResult> Add([FromBody] CreateUserCommand request)
     {
         var response = await _mediator.Send(request);
         return response.IsSuccess ? Ok(response) : BadRequest(response);
@@ -105,7 +104,7 @@ public class ProductsController : ControllerBase
     [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ServiceResponse<bool>))]
     [HttpPut("[action]")]
     [Authorize]
-    public async Task<IActionResult> Update([FromBody] UpdateProductCommand request)
+    public async Task<IActionResult> Update([FromBody] UpdateUserCommand request)
     {
         var response = await _mediator.Send(request);
         return response.IsSuccess ? Ok(response) : BadRequest(response);
@@ -121,7 +120,7 @@ public class ProductsController : ControllerBase
     [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ServiceResponse<bool>))]
     [HttpDelete("[action]")]
     [Authorize]
-    public async Task<IActionResult> Delete([FromBody] DeleteProductCommand request)
+    public async Task<IActionResult> Delete([FromBody] DeleteUserCommand request)
     {
         var response = await _mediator.Send(request);
         return response.IsSuccess ? Ok(response) : BadRequest(response);

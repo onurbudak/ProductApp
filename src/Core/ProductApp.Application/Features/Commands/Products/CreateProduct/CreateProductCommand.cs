@@ -2,7 +2,7 @@
 
 namespace ProductApp.Application.Features.Commands.Products.CreateProduct;
 
-public class CreateProductCommand : ICommand<bool>
+public class CreateUserCommand : ICommand<bool>
 {
     public string? Name { get; set; }
     public decimal? Value { get; set; }

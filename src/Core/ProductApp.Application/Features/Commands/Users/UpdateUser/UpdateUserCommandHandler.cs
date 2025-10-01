@@ -1,44 +1,36 @@
 ﻿using AutoMapper;
 using MassTransit;
 using Microsoft.Extensions.Logging;
-using ProductApp.Application.Common;
 using ProductApp.Application.Interfaces.Repository;
 using ProductApp.Application.Messaging;
 using ProductApp.Application.Wrappers;
 using ProductApp.Domain.Entities;
 
-namespace ProductApp.Application.Features.Commands.Products.UpdateProduct;
+namespace ProductApp.Application.Features.Commands.Users.UpdateUser;
 
 public class UpdateUserCommandHandler : ICommandHandler<UpdateUserCommand, bool>
 {
-    private readonly IProductRepository _productRepository;
+    private readonly IUserRepository _userRepository;
     private readonly IMapper _mapper;
     private readonly ILogger<UpdateUserCommandHandler> _logger;
     private readonly IPublishEndpoint _publishEndpoint;
 
-    public UpdateUserCommandHandler(IProductRepository productRepository, IMapper mapper, ILogger<UpdateUserCommandHandler> logger, IPublishEndpoint publishEndpoint)
+    public UpdateUserCommandHandler(IUserRepository userRepository, IMapper mapper, ILogger<UpdateUserCommandHandler> logger, IPublishEndpoint publishEndpoint)
     {
-        _productRepository = productRepository;
+        _userRepository = userRepository;
         _mapper = mapper;
         _logger = logger;
         _publishEndpoint = publishEndpoint;
     }
     public async Task<ServiceResponse<bool>> Handle(UpdateUserCommand request, CancellationToken cancellationToken)
     {
-        _logger.LogInformation("UpdateProductCommand Started");
+        User mappedUser = _mapper.Map<User>(request);
+        User? user = await _userRepository.UpdateAsync(mappedUser);
 
-        //var status = 9999 + 9999 + 9999 + 9999 + 9999 + 9999 + 9999 + 999999999999;
-        //var newStatus = Convert.ToInt16(status);
-
-        Product mappedProduct = _mapper.Map<Product>(request);
-        Product? product = await _productRepository.UpdateAsync(mappedProduct);
-
-        if (product is null)
+        if (user is null)
         {
             return ServiceResponse<bool>.FailureDataWithMessage(Messages.RecordIsNotFound, new Error(MessageCode.RecordIsNotFound, Messages.RecordIsNotFound));
         }
-
-        await _publishEndpoint.Publish(new ProductMessage { Id = product.Id, Name = product.Name, Value = product.Value, Quantity = product.Quantity, Status = (short)product.Id }, cancellationToken);
 
         return ServiceResponse<bool>.SuccessDataWithMessage(true, Messages.Success);
     }

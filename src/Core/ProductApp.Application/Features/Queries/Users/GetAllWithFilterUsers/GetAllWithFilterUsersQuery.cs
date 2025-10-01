@@ -1,9 +1,9 @@
 ﻿using ProductApp.Application.Messaging;
 using ProductApp.Domain.Dto;
 
-namespace ProductApp.Application.Features.Queries.Products.GetAllWithFilterProducts;
+namespace ProductApp.Application.Features.Queries.Users.GetAllWithFilterUsers;
 
-public class GetAllWithFilterProductsQuery : IPaginatedQuery<List<ProductViewDto>>
+public class GetAllWithFilterUsersQuery : IPaginatedQuery<List<UserViewDto>>
 {
     public int PageSize { get; set; }
     public int PageNumber { get; set; }

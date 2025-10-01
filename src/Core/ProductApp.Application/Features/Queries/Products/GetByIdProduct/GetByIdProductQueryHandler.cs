@@ -1,8 +1,8 @@
 ﻿using AutoMapper;
-using ProductApp.Application.Dto;
 using ProductApp.Application.Interfaces.Repository;
 using ProductApp.Application.Messaging;
 using ProductApp.Application.Wrappers;
+using ProductApp.Domain.Dto;
 using ProductApp.Domain.Entities;
 
 namespace ProductApp.Application.Features.Queries.Products.GetByIdProduct;

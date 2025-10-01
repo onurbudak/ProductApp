@@ -4,22 +4,22 @@ using ProductApp.Application.Messaging;
 using ProductApp.Application.Wrappers;
 using ProductApp.Domain.Entities;
 
-namespace ProductApp.Application.Features.Commands.Products.CreateProduct;
+namespace ProductApp.Application.Features.Commands.Users.CreateUser;
 
 public class CreateUserCommandHandler : ICommandHandler<CreateUserCommand, bool>
 {
-    private readonly IProductRepository _productRepository;
+    private readonly IUserRepository _userRepository;
     private readonly IMapper _mapper;
 
-    public CreateUserCommandHandler(IProductRepository productRepository, IMapper mapper)
+    public CreateUserCommandHandler(IUserRepository userRepository, IMapper mapper)
     {
-        _productRepository = productRepository;
+        _userRepository = userRepository;
         _mapper = mapper;
     } 
     public async Task<ServiceResponse<bool>> Handle(CreateUserCommand request, CancellationToken cancellationToken)
     {
-        Product mappedProduct = _mapper.Map<Product>(request);
-        _ = await _productRepository.AddAsync(mappedProduct);
+        User mappedUser = _mapper.Map<User>(request);
+        _ = await _userRepository.AddAsync(mappedUser);
         return ServiceResponse<bool>.SuccessDataWithMessage(true, Messages.Success);
     }
 }

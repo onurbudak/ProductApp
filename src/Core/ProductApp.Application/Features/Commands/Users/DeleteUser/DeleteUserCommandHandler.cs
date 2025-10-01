@@ -4,24 +4,24 @@ using ProductApp.Application.Messaging;
 using ProductApp.Application.Wrappers;
 using ProductApp.Domain.Entities;
 
-namespace ProductApp.Application.Features.Commands.Products.DeleteProduct;
+namespace ProductApp.Application.Features.Commands.Users.DeleteUser;
 
 public class DeleteUserCommandHandler : ICommandHandler<DeleteUserCommand, bool>
 {
-    private readonly IProductRepository _productRepository;
+    private readonly IUserRepository _userRepository;
     private readonly IMapper _mapper;
 
-    public DeleteUserCommandHandler(IProductRepository productRepository, IMapper mapper)
+    public DeleteUserCommandHandler(IUserRepository userRepository, IMapper mapper)
     {
-        _productRepository = productRepository;
+        _userRepository = userRepository;
         _mapper = mapper;
     }
     public async Task<ServiceResponse<bool>> Handle(DeleteUserCommand request, CancellationToken cancellationToken)
     {
-        Product mappedProduct = _mapper.Map<Product>(request);
-        Product? product = await _productRepository.DeleteAsync(mappedProduct);
+        User mappedUser = _mapper.Map<User>(request);
+        User? user = await _userRepository.DeleteAsync(mappedUser);
 
-        if (product is null)
+        if (user is null)
         {
             return ServiceResponse<bool>.FailureDataWithMessage(Messages.RecordIsNotFound, new Error(MessageCode.RecordIsNotFound, Messages.RecordIsNotFound));
         }

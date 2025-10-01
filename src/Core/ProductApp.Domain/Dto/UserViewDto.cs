@@ -1,6 +1,6 @@
 ﻿namespace ProductApp.Domain.Dto;
 
-public class ProductViewDto
+public class UserViewDto
 {
     public long Id { get; set; }
     public string? Name { get; set; }

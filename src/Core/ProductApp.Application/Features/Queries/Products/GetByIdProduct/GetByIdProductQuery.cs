@@ -1,5 +1,5 @@
-﻿using ProductApp.Application.Dto;
-using ProductApp.Application.Messaging;
+﻿using ProductApp.Application.Messaging;
+using ProductApp.Domain.Dto;
 
 namespace ProductApp.Application.Features.Queries.Products.GetByIdProduct;
 

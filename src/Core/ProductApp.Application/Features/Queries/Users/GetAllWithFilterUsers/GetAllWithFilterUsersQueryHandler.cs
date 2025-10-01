@@ -8,15 +8,15 @@ using ProductApp.Application.Wrappers;
 using ProductApp.Domain.Dto;
 using ProductApp.Domain.Entities;
 
-namespace ProductApp.Application.Features.Queries.Products.GetAllWithFilterProducts;
+namespace ProductApp.Application.Features.Queries.Users.GetAllWithFilterUsers;
 
-public class GetAllWithFilterProductsQueryHandler : IPaginatedQueryHandler<GetAllWithFilterProductsQuery, List<ProductViewDto>>
+public class GetAllWithFilterUsersQueryHandler : IPaginatedQueryHandler<GetAllWithFilterUsersQuery, List<UserViewDto>>
 {
     private readonly IProductRepository _productRepository;
     private readonly IMapper _mapper;
     private readonly IFilterService<Product> _filterService;
 
-    public GetAllWithFilterProductsQueryHandler(
+    public GetAllWithFilterUsersQueryHandler(
         IProductRepository productRepository,
         IMapper mapper,
         IFilterService<Product> filterService)
@@ -26,7 +26,7 @@ public class GetAllWithFilterProductsQueryHandler : IPaginatedQueryHandler<GetAl
         _filterService = filterService;
     }
 
-    public async Task<PaginatedResponse<List<ProductViewDto>>> Handle(GetAllWithFilterProductsQuery request, CancellationToken cancellationToken)
+    public async Task<PaginatedResponse<List<UserViewDto>>> Handle(GetAllWithFilterUsersQuery request, CancellationToken cancellationToken)
     {
         var query = _productRepository.Query();
 
@@ -50,14 +50,14 @@ public class GetAllWithFilterProductsQueryHandler : IPaginatedQueryHandler<GetAl
 
         if (products.Count == 0)
         {
-            return PaginatedResponse<List<ProductViewDto>>.FailurePaginatedDataWithMessage(Messages.RecordIsNotFound,
+            return PaginatedResponse<List<UserViewDto>>.FailurePaginatedDataWithMessage(Messages.RecordIsNotFound,
                 new Error(MessageCode.RecordIsNotFound, Messages.RecordIsNotFound));
         }
 
         products.Paginated(request.PageNumber, request.PageSize, out int totalItems, out var paginatedDatas);
-        List<ProductViewDto> productViewDtos = _mapper.Map<List<ProductViewDto>>(paginatedDatas);
+        List<UserViewDto> productViewDtos = _mapper.Map<List<UserViewDto>>(paginatedDatas);
 
-        return PaginatedResponse<List<ProductViewDto>>.SuccessPaginatedDataWithMessage(
+        return PaginatedResponse<List<UserViewDto>>.SuccessPaginatedDataWithMessage(
             productViewDtos, Messages.Success, totalItems, request.PageNumber, request.PageSize);
     }
 }
