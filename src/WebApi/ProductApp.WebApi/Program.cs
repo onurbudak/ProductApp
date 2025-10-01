@@ -89,10 +89,10 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             OnMessageReceived = context =>
             {
                 // Örn: token query string veya header'dan okunabilir
-                var token = context.Request.Query["access_token"];
+                var token = context.Request.Headers["Authorization"];
                 if (!string.IsNullOrEmpty(token))
                 {
-                    context.Token = token;
+                    //context.Token = token;
                 }
                 return Task.CompletedTask;
             },

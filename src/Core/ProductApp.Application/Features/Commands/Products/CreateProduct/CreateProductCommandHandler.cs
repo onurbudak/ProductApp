@@ -6,17 +6,17 @@ using ProductApp.Domain.Entities;
 
 namespace ProductApp.Application.Features.Commands.Products.CreateProduct;
 
-public class CreateUserCommandHandler : ICommandHandler<CreateUserCommand, bool>
+public class CreateProductCommandHandler : ICommandHandler<CreateProductCommand, bool>
 {
     private readonly IProductRepository _productRepository;
     private readonly IMapper _mapper;
 
-    public CreateUserCommandHandler(IProductRepository productRepository, IMapper mapper)
+    public CreateProductCommandHandler(IProductRepository productRepository, IMapper mapper)
     {
         _productRepository = productRepository;
         _mapper = mapper;
     } 
-    public async Task<ServiceResponse<bool>> Handle(CreateUserCommand request, CancellationToken cancellationToken)
+    public async Task<ServiceResponse<bool>> Handle(CreateProductCommand request, CancellationToken cancellationToken)
     {
         Product mappedProduct = _mapper.Map<Product>(request);
         _ = await _productRepository.AddAsync(mappedProduct);

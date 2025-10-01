@@ -2,7 +2,7 @@
 
 namespace ProductApp.Application.Features.Commands.Products.DeleteProduct;
 
-public class DeleteUserCommand : ICommand<bool>
+public class DeleteProductCommand : ICommand<bool>
 {
     public long Id { get; set; }
 }

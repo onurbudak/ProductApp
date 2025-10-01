@@ -9,21 +9,21 @@ using ProductApp.Domain.Entities;
 
 namespace ProductApp.Application.Features.Commands.Products.UpdateProduct;
 
-public class UpdateUserCommandHandler : ICommandHandler<UpdateUserCommand, bool>
+public class UpdateProductCommandHandler : ICommandHandler<UpdateProductCommand, bool>
 {
     private readonly IProductRepository _productRepository;
     private readonly IMapper _mapper;
-    private readonly ILogger<UpdateUserCommandHandler> _logger;
+    private readonly ILogger<UpdateProductCommandHandler> _logger;
     private readonly IPublishEndpoint _publishEndpoint;
 
-    public UpdateUserCommandHandler(IProductRepository productRepository, IMapper mapper, ILogger<UpdateUserCommandHandler> logger, IPublishEndpoint publishEndpoint)
+    public UpdateProductCommandHandler(IProductRepository productRepository, IMapper mapper, ILogger<UpdateProductCommandHandler> logger, IPublishEndpoint publishEndpoint)
     {
         _productRepository = productRepository;
         _mapper = mapper;
         _logger = logger;
         _publishEndpoint = publishEndpoint;
     }
-    public async Task<ServiceResponse<bool>> Handle(UpdateUserCommand request, CancellationToken cancellationToken)
+    public async Task<ServiceResponse<bool>> Handle(UpdateProductCommand request, CancellationToken cancellationToken)
     {
         _logger.LogInformation("UpdateProductCommand Started");
 

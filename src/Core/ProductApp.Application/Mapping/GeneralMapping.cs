@@ -13,9 +13,9 @@ public class GeneralMapping : Profile
     public GeneralMapping()
     {
         CreateMap<Product, ProductViewDto>();
-        CreateMap<CreateUserCommand, Product>();
-        CreateMap<UpdateUserCommand, Product>();
-        CreateMap<DeleteUserCommand, Product>();
+        CreateMap<CreateProductCommand, Product>();
+        CreateMap<UpdateProductCommand, Product>();
+        CreateMap<DeleteProductCommand, Product>();
         CreateMap<ProductMessage, Product>();
     }
 }

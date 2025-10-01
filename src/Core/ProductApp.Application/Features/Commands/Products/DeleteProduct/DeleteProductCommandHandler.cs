@@ -6,17 +6,17 @@ using ProductApp.Domain.Entities;
 
 namespace ProductApp.Application.Features.Commands.Products.DeleteProduct;
 
-public class DeleteUserCommandHandler : ICommandHandler<DeleteUserCommand, bool>
+public class DeleteProductCommandHandler : ICommandHandler<DeleteProductCommand, bool>
 {
     private readonly IProductRepository _productRepository;
     private readonly IMapper _mapper;
 
-    public DeleteUserCommandHandler(IProductRepository productRepository, IMapper mapper)
+    public DeleteProductCommandHandler(IProductRepository productRepository, IMapper mapper)
     {
         _productRepository = productRepository;
         _mapper = mapper;
     }
-    public async Task<ServiceResponse<bool>> Handle(DeleteUserCommand request, CancellationToken cancellationToken)
+    public async Task<ServiceResponse<bool>> Handle(DeleteProductCommand request, CancellationToken cancellationToken)
     {
         Product mappedProduct = _mapper.Map<Product>(request);
         Product? product = await _productRepository.DeleteAsync(mappedProduct);
