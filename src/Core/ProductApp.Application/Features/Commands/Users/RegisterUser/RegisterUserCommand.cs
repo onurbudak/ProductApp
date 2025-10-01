@@ -1,6 +1,9 @@
-﻿namespace ProductApp.Application.Services;
+﻿using ProductApp.Application.Messaging;
 
-public class RegisterUserCommand
+
+namespace ProductApp.Application.Features.Commands.Users.RegisterUser;
+
+public class RegisterUserCommand : ICommand<bool>
 {
     public string Name { get; set; }
     public string SurName { get; set; }

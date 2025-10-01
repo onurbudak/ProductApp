@@ -113,7 +113,7 @@ builder.Services.AddSwaggerGen(opt =>
     {
         Title = "Auth API",
         Version = "v1",
-        Description = "JWT + Refresh Token örnek API"
+        Description = "JWT"
     });
 
     // JWT Bearer Security Definition

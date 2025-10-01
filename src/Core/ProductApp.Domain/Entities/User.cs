@@ -2,7 +2,7 @@
 
 namespace ProductApp.Domain.Entities;
 
-public class User : BaseEntity
+public class User : BaseEntity<long>
 {
     public string Name { get; set; }
     public string SurName { get; set; }

@@ -1,11 +1,12 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using System.Linq.Expressions;
+using Microsoft.EntityFrameworkCore;
 using ProductApp.Application.Interfaces.Repository;
 using ProductApp.Domain.Common;
 using ProductApp.Persistence.Context;
 
 namespace ProductApp.Persistence.Repositories;
 
-public class GenericRepositoryAsync<TEntity> : IGenericRepositoryAsync<TEntity> where TEntity : BaseEntity
+public class GenericRepositoryAsync<TEntity, TId> : IGenericRepositoryAsync<TEntity, TId> where TEntity : BaseEntity<TId> where TId : notnull
 {
     private readonly ApplicationDbContext _dbContext;
 
@@ -16,7 +17,7 @@ public class GenericRepositoryAsync<TEntity> : IGenericRepositoryAsync<TEntity> 
 
     public async Task<List<TEntity>> GetAllAsync() => await _dbContext.Set<TEntity>().Where(e => !e.IsDeleted).ToListAsync();
 
-    public async Task<TEntity?> GetByIdAsync(long id) => await _dbContext.Set<TEntity>().Where(e => !e.IsDeleted).SingleOrDefaultAsync(e => e.Id == id);
+    public async Task<TEntity?> GetByIdAsync(TId id) => await _dbContext.Set<TEntity>().Where(e => !e.IsDeleted).SingleOrDefaultAsync(e => e.Id.Equals(id));
 
     public async Task<TEntity> AddAsync(TEntity entity)
     {
@@ -53,5 +54,10 @@ public class GenericRepositoryAsync<TEntity> : IGenericRepositoryAsync<TEntity> 
         }
         return existingEntity;
     }
+
+    public async Task<TEntity?> GetByIdWithFilterAsync(Expression<Func<TEntity, bool>> filter) => await _dbContext.Set<TEntity>().SingleOrDefaultAsync(filter);
+
+    public async Task<List<TEntity>> GetAllWithFilterAsync(Expression<Func<TEntity, bool>> filter) => await _dbContext.Set<TEntity>().Where(filter).ToListAsync();
+
 }
 

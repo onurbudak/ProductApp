@@ -4,7 +4,7 @@ using ProductApp.Persistence.Context;
 
 namespace ProductApp.Persistence.Repositories;
 
-public class RefreshTokenRepository : GenericRepositoryAsync<RefreshToken>, IRefreshTokenRepository
+public class RefreshTokenRepository : GenericRepositoryAsync<RefreshToken, long>, IRefreshTokenRepository
 {
     public RefreshTokenRepository(ApplicationDbContext dbContext) : base(dbContext)
     {

@@ -1,8 +1,8 @@
 ﻿namespace ProductApp.Domain.Common;
 
-public class BaseEntity
+public class BaseEntity<TId> where TId : notnull
 {
-    public long Id { get; set; }
+    public TId Id { get; set; }
 
     public DateTime CreateDate { get; set; }
 

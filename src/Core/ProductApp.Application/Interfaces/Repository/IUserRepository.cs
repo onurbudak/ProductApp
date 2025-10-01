@@ -2,7 +2,7 @@
 
 namespace ProductApp.Application.Interfaces.Repository;
 
-public interface IUserRepository : IGenericRepositoryAsync<User>
+public interface IUserRepository : IGenericRepositoryAsync<User,long>
 {
 
 }

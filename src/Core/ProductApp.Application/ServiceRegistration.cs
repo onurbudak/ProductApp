@@ -14,7 +14,6 @@ public static class ServiceRegistration
 
         services.AddAutoMapper(assembly);
         services.AddMediatR(assembly);
-        services.AddScoped<IUserService, UserService>();
         services.AddScoped<ITokenService, TokenService>();
     }
 }

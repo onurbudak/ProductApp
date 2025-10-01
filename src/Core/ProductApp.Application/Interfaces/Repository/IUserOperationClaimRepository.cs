@@ -2,7 +2,7 @@
 
 namespace ProductApp.Application.Interfaces.Repository;
 
-public interface IUserOperationClaimRepository : IGenericRepositoryAsync<UserOperationClaim>
+public interface IUserOperationClaimRepository : IGenericRepositoryAsync<UserOperationClaim, long>
 {
 
 }

@@ -4,7 +4,7 @@ using ProductApp.Persistence.Context;
 
 namespace ProductApp.Persistence.Repositories;
 
-public class OperationClaimRepository : GenericRepositoryAsync<OperationClaim>, IOperationClaimRepository
+public class OperationClaimRepository : GenericRepositoryAsync<OperationClaim, long>, IOperationClaimRepository
 {
     public OperationClaimRepository(ApplicationDbContext dbContext) : base(dbContext)
     {

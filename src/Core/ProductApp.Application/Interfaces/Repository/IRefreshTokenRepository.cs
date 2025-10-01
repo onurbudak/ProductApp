@@ -2,7 +2,7 @@
 
 namespace ProductApp.Application.Interfaces.Repository;
 
-public interface IRefreshTokenRepository : IGenericRepositoryAsync<RefreshToken>
+public interface IRefreshTokenRepository : IGenericRepositoryAsync<RefreshToken, long>
 {
 
 }

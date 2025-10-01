@@ -1,5 +1,8 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using ProductApp.Application.Features.Commands.Users.LoginUser;
+using ProductApp.Application.Features.Commands.Users.RegisterUser;
 using ProductApp.Application.Services;
 using ProductApp.Application.Wrappers;
 
@@ -12,15 +15,15 @@ namespace ProductApp.WebApi.Controllers;
 [ApiController]
 public class UsersController : ControllerBase
 {
-    private readonly IUserService _userService;
+    private readonly IMediator _mediator;
 
     /// <summary>
     /// ProductsController
     /// </summary>
-    /// <param name="userService"></param>
-    public UsersController(IUserService userService)
+    /// <param name="mediator"></param>
+    public UsersController(IMediator mediator)
     {
-        _userService = userService;
+        _mediator = mediator;
     }
 
     /// <summary>
@@ -31,11 +34,11 @@ public class UsersController : ControllerBase
     [Produces("application/json", "text/plain")]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ServiceResponse<bool>))]
     [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ServiceResponse<bool>))]
-    [HttpPost("Register")]
+    [HttpPost("[action]")]
     [AllowAnonymous]
     public async Task<IActionResult> Register([FromBody] RegisterUserCommand request)
     {
-        var response = await _userService.Register(request);
+        var response = await _mediator.Send(request);
         return response.IsSuccess ? Ok(response) : BadRequest(response);
     }
 
@@ -47,11 +50,11 @@ public class UsersController : ControllerBase
     [Produces("application/json", "text/plain")]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ServiceResponse<AccessToken>))]
     [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ServiceResponse<AccessToken>))]
-    [HttpPost("Login")]
+    [HttpPost("[action]")]
     [AllowAnonymous]
     public async Task<IActionResult> Login([FromBody] LoginUserCommand request)
     {
-        var response = await _userService.Login(request);
+        var response = await _mediator.Send(request);
         return response.IsSuccess ? Ok(response) : BadRequest(response);
     }
 

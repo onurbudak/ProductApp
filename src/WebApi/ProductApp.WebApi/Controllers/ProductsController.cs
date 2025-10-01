@@ -7,6 +7,8 @@ using ProductApp.Application.Features.Commands.Products.DeleteProduct;
 using ProductApp.Application.Features.Commands.Products.UpdateProduct;
 using ProductApp.Application.Features.Queries.Products.GetAllProducts;
 using ProductApp.Application.Features.Queries.Products.GetByIdProduct;
+using ProductApp.Application.Features.Queries.Products.GetAllWithFilterProducts;
+using ProductApp.Application.Features.Queries.Products.GetByIdWithFilterProduct;
 using ProductApp.Application.Wrappers;
 
 namespace ProductApp.WebApi.Controllers;
@@ -37,7 +39,7 @@ public class ProductsController : ControllerBase
     [Produces("application/json", "text/plain")]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(PaginatedResponse<List<ProductViewDto>>))]
     [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(PaginatedResponse<List<ProductViewDto>>))]
-    [HttpGet]
+    [HttpGet("[action]")]
     [Authorize]
     public async Task<IActionResult> GetAll([FromQuery] GetAllProductsQuery request)
     {
@@ -53,8 +55,41 @@ public class ProductsController : ControllerBase
     [Produces("application/json", "text/plain")]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ServiceResponse<ProductViewDto>))]
     [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ServiceResponse<ProductViewDto>))]
-    [HttpGet("{id}")]
+    [HttpGet("[action]/{id}")]
+    [Authorize]
     public async Task<IActionResult> GetById([FromRoute] GetByIdProductQuery request)
+    {
+        var response = await _mediator.Send(request);
+        return response.IsSuccess ? Ok(response) : BadRequest(response);
+    }
+
+    /// <summary>
+    /// GetAllWithFilter
+    /// </summary>
+    /// <param name="request"></param>
+    /// <returns></returns>
+    [Produces("application/json", "text/plain")]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(PaginatedResponse<List<ProductViewDto>>))]
+    [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(PaginatedResponse<List<ProductViewDto>>))]
+    [HttpGet("[action]")]
+    [Authorize]
+    public async Task<IActionResult> GetAllWithFilter([FromQuery] GetAllWithFilterProductsQuery request)
+    {
+        var response = await _mediator.Send(request);
+        return response.IsSuccess ? Ok(response) : BadRequest(response);
+    }
+
+    /// <summary>
+    /// GetByIdWithFilter
+    /// </summary>
+    /// <param name="request"></param>
+    /// <returns></returns>
+    [Produces("application/json", "text/plain")]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ServiceResponse<ProductViewDto>))]
+    [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ServiceResponse<ProductViewDto>))]
+    [HttpGet("[action]")]
+    [Authorize]
+    public async Task<IActionResult> GetByIdWithFilter([FromRoute] GetByIdWithFilterQuery request)
     {
         var response = await _mediator.Send(request);
         return response.IsSuccess ? Ok(response) : BadRequest(response);
@@ -68,7 +103,8 @@ public class ProductsController : ControllerBase
     [Produces("application/json", "text/plain")]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ServiceResponse<bool>))]
     [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ServiceResponse<bool>))]
-    [HttpPost]
+    [HttpPost("[action]")]
+    [Authorize]
     public async Task<IActionResult> Add([FromBody] CreateProductCommand request)
     {
         var response = await _mediator.Send(request);
@@ -83,7 +119,8 @@ public class ProductsController : ControllerBase
     [Produces("application/json", "text/plain")]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ServiceResponse<bool>))]
     [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ServiceResponse<bool>))]
-    [HttpPut]
+    [HttpPut("[action]")]
+    [Authorize]
     public async Task<IActionResult> Update([FromBody] UpdateProductCommand request)
     {
         var response = await _mediator.Send(request);
@@ -98,7 +135,8 @@ public class ProductsController : ControllerBase
     [Produces("application/json", "text/plain")]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ServiceResponse<bool>))]
     [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ServiceResponse<bool>))]
-    [HttpDelete]
+    [HttpDelete("[action]")]
+    [Authorize]
     public async Task<IActionResult> Delete([FromBody] DeleteProductCommand request)
     {
         var response = await _mediator.Send(request);

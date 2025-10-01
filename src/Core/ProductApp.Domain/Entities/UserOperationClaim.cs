@@ -2,7 +2,7 @@
 
 namespace ProductApp.Domain.Entities;
 
-public class UserOperationClaim : BaseEntity
+public class UserOperationClaim : BaseEntity<long>
 {
     public long UserId { get; set; }
     public long OperationClaimId { get; set; }
