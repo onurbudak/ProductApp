@@ -1,6 +1,8 @@
 ﻿using AutoMapper;
 using ProductApp.Application.Dto;
 using ProductApp.Application.Extensions;
+using ProductApp.Application.Filtering;
+using ProductApp.Application.Interfaces.Filtering;
 using ProductApp.Application.Interfaces.Repository;
 using ProductApp.Application.Messaging;
 using ProductApp.Application.Wrappers;
@@ -12,31 +14,52 @@ public class GetAllWithFilterProductsQueryHandler : IPaginatedQueryHandler<GetAl
 {
     private readonly IProductRepository _productRepository;
     private readonly IMapper _mapper;
+    private readonly IFilterService<Product> _filterService;
 
-    public GetAllWithFilterProductsQueryHandler(IProductRepository productRepository, IMapper mapper)
+    public GetAllWithFilterProductsQueryHandler(
+        IProductRepository productRepository,
+        IMapper mapper,
+        IFilterService<Product> filterService)
     {
         _productRepository = productRepository;
         _mapper = mapper;
+        _filterService = filterService;
     }
 
     public async Task<PaginatedResponse<List<ProductViewDto>>> Handle(GetAllWithFilterProductsQuery request, CancellationToken cancellationToken)
     {
-        List<Product> products = await _productRepository.GetAllWithFilterAsync(e =>
-            request.Status != 0 && e.Status == request.Status &&
-            !string.IsNullOrWhiteSpace(request.Name) && e.Name == request.Name &&
-            request.Value.HasValue && e.Value == request.Value &&
-            request.Quantity.HasValue && e.Quantity == request.Quantity);
+        var query = _productRepository.Query();
+
+        List<FilterCriteria> filters = new List<FilterCriteria>();
+
+        if (!string.IsNullOrWhiteSpace(request.Name))
+            filters.Add(new FilterCriteria { Field = "Name", Operator = "==", Value = request.Name });
+
+        if (request.Value.HasValue)
+            filters.Add(new FilterCriteria { Field = "Value", Operator = "==", Value = request.Value.Value });
+
+        if (request.Quantity.HasValue)
+            filters.Add(new FilterCriteria { Field = "Quantity", Operator = "==", Value = request.Quantity.Value });
+
+        if (request.Status != 0)
+            filters.Add(new FilterCriteria { Field = "Status", Operator = "==", Value = request.Status });
+
+        query = _filterService.ApplyFilters(query, filters);
+
+        List<Product> products = query.ToList();
 
         if (products.Count == 0)
         {
-            return PaginatedResponse<List<ProductViewDto>>.FailurePaginatedDataWithMessage(Messages.RecordIsNotFound, new Error(MessageCode.RecordIsNotFound, Messages.RecordIsNotFound));
+            return PaginatedResponse<List<ProductViewDto>>.FailurePaginatedDataWithMessage(Messages.RecordIsNotFound,
+                new Error(MessageCode.RecordIsNotFound, Messages.RecordIsNotFound));
         }
 
         products.Paginated(request.PageNumber, request.PageSize, out int totalItems, out var paginatedDatas);
         List<ProductViewDto> productViewDtos = _mapper.Map<List<ProductViewDto>>(paginatedDatas);
 
-        return PaginatedResponse<List<ProductViewDto>>.SuccessPaginatedDataWithMessage(productViewDtos, Messages.Success, totalItems, request.PageNumber, request.PageSize);
-
+        return PaginatedResponse<List<ProductViewDto>>.SuccessPaginatedDataWithMessage(
+            productViewDtos, Messages.Success, totalItems, request.PageNumber, request.PageSize);
     }
 }
+
 

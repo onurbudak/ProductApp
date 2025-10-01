@@ -18,7 +18,7 @@ public class UsersController : ControllerBase
     private readonly IMediator _mediator;
 
     /// <summary>
-    /// ProductsController
+    /// UsersController
     /// </summary>
     /// <param name="mediator"></param>
     public UsersController(IMediator mediator)

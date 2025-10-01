@@ -71,25 +71,9 @@ public class ProductsController : ControllerBase
     [Produces("application/json", "text/plain")]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(PaginatedResponse<List<ProductViewDto>>))]
     [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(PaginatedResponse<List<ProductViewDto>>))]
-    [HttpGet("[action]")]
+    [HttpPost("[action]")]
     [Authorize]
-    public async Task<IActionResult> GetAllWithFilter([FromQuery] GetAllWithFilterProductsQuery request)
-    {
-        var response = await _mediator.Send(request);
-        return response.IsSuccess ? Ok(response) : BadRequest(response);
-    }
-
-    /// <summary>
-    /// GetByIdWithFilter
-    /// </summary>
-    /// <param name="request"></param>
-    /// <returns></returns>
-    [Produces("application/json", "text/plain")]
-    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ServiceResponse<ProductViewDto>))]
-    [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ServiceResponse<ProductViewDto>))]
-    [HttpGet("[action]")]
-    [Authorize]
-    public async Task<IActionResult> GetByIdWithFilter([FromRoute] GetByIdWithFilterQuery request)
+    public async Task<IActionResult> GetAllWithFilter([FromBody] GetAllWithFilterProductsQuery request)
     {
         var response = await _mediator.Send(request);
         return response.IsSuccess ? Ok(response) : BadRequest(response);

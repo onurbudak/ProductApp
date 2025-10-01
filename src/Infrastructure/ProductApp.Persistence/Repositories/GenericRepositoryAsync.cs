@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using ProductApp.Application.Interfaces.Repository;
 using ProductApp.Domain.Common;
+using ProductApp.Domain.Entities;
 using ProductApp.Persistence.Context;
 
 namespace ProductApp.Persistence.Repositories;
@@ -55,9 +56,11 @@ public class GenericRepositoryAsync<TEntity, TId> : IGenericRepositoryAsync<TEnt
         return existingEntity;
     }
 
-    public async Task<TEntity?> GetByIdWithFilterAsync(Expression<Func<TEntity, bool>> filter) => await _dbContext.Set<TEntity>().SingleOrDefaultAsync(filter);
-
     public async Task<List<TEntity>> GetAllWithFilterAsync(Expression<Func<TEntity, bool>> filter) => await _dbContext.Set<TEntity>().Where(filter).ToListAsync();
 
+    public IQueryable<TEntity> Query()
+    {
+        return _dbContext.Set<TEntity>().AsQueryable();
+    }
 }
 
