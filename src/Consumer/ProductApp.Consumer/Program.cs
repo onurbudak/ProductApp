@@ -2,9 +2,7 @@
 using ProductApp.Application;
 using ProductApp.Application.Common;
 using ProductApp.Application.Consumers;
-using ProductApp.Application.Interfaces.Queues;
 using ProductApp.Application.Jobs;
-using ProductApp.Application.Queues;
 using ProductApp.Persistence;
 using Quartz;
 using Serilog;
@@ -29,7 +27,6 @@ string quartzTriggerName = appSettings?.Quartz?.TriggerName ?? string.Empty;
 
 builder.Host.UseSerilog((_, loggerConfiguration) => loggerConfiguration.WriteTo.Console(formatProvider: null).ReadFrom.Configuration(builder.Configuration));
 
-builder.Services.AddSingleton<IRabbitMqFactory, RabbitMqFactory>();
 //builder.Services.AddSingleton<IJob, ProductMessageJob>();
 
 builder.Services.AddApplicationRegistration();
@@ -103,10 +100,16 @@ builder.Services.AddControllers();
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
 
+builder.Services.AddResponseCompression(options =>
+{
+    options.EnableForHttps = true; // HTTPS yanıtlarında da sıkıştırmayı aç
+});
+
 var app = builder.Build();
 
 //IScheduler scheduler = await QuartzJobFactory<ProductMessageJob>.CreateJobAsync("ProductMessageJob", "ProductMessageJobGroup", "ProductMessageTrigger", "ProductMessageTriggerGroup", 300, 120);
 
+app.UseResponseCompression();
 app.UseSerilogRequestLogging();
 
 // Configure the HTTP request pipeline.

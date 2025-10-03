@@ -32,7 +32,7 @@ public class ProductMessageJob : IJob
         {
             Console.WriteLine($"ProductMessageJob Error : {ex}");
             _logger.LogError(ex, "ProductMessageJob Error");
-            throw new Exception(ex.Message, ex);
+            throw;
         }
     }
 }

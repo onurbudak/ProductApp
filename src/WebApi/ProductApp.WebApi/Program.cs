@@ -144,11 +144,17 @@ builder.Services.AddSwaggerGen(opt =>
     });
 });
 
+builder.Services.AddResponseCompression(options =>
+{
+    options.EnableForHttps = true; // HTTPS yanıtlarında da sıkıştırmayı aç
+});
+
 var app = builder.Build();
 
+app.UseResponseCompression();
+app.UseErrorHandler();
 app.UseSerilogRequestLogging();
 app.UseLoggingHandler();
-app.UseErrorHandler();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

@@ -3,6 +3,8 @@ using MediatR;
 using Microsoft.Extensions.DependencyInjection;
 using ProductApp.Application.Filters;
 using ProductApp.Application.Interfaces.Filters;
+using ProductApp.Application.Interfaces.Queues;
+using ProductApp.Application.Queues;
 using ProductApp.Application.Services;
 using ProductApp.Domain.Entities;
 
@@ -16,6 +18,7 @@ public static class ServiceRegistration
 
         services.AddAutoMapper(assembly);
         services.AddMediatR(assembly);
+        services.AddSingleton<IRabbitMqFactory, RabbitMqFactory>();
         services.AddScoped<ITokenService, TokenService>();
         services.AddScoped<IFilterService<Product>, DynamicLinqFilterService<Product>>();
         services.AddScoped<IFilterService<User>, DynamicLinqFilterService<User>>();

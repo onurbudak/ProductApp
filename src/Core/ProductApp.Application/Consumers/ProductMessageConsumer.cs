@@ -52,7 +52,7 @@ public class ProductMessageConsumer : IConsumer<ProductMessage>
         {
             Console.WriteLine($"ProductMessageConsumer Error : {ex}");
             _logger.LogError(ex, "ProductMessageConsumer Error");
-            throw new Exception(ex.Message, ex);
+            throw;
         }
     }
 }
