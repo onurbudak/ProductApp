@@ -27,8 +27,8 @@ public class UpdateProductCommandHandler : ICommandHandler<UpdateProductCommand,
     {
         _logger.LogInformation("UpdateProductCommand Started");
 
-        var status = 9999 + 9999 + 9999 + 9999 + 9999 + 9999 + 9999 + 999999999999;
-        var newStatus = Convert.ToInt16(status);
+        //var status = 9999 + 9999 + 9999 + 9999 + 9999 + 9999 + 9999 + 999999999999;
+        //var newStatus = Convert.ToInt16(status);
 
         Product mappedProduct = _mapper.Map<Product>(request);
         Product? product = await _productRepository.UpdateAsync(mappedProduct);
