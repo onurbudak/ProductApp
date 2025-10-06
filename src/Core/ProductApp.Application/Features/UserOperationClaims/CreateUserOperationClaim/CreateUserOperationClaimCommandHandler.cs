@@ -19,18 +19,8 @@ public class CreateUserOperationClaimCommandHandler : ICommandHandler<CreateUser
     }
     public async Task<ServiceResponse<UserOperationClaim>> Handle(CreateUserOperationClaimCommand request, CancellationToken cancellationToken)
     {
-        if (request.OperationClaimIds.Count == 0)
-        {
-            return ServiceResponse<UserOperationClaim>.FailureDataWithMessage(Messages.Error, new Error(MessageCode.Error, Messages.Error));
-        }
-
-        UserOperationClaim? userOperationClaim = null;
         UserOperationClaim mappedUserOperationClaim = _mapper.Map<UserOperationClaim>(request);
-        foreach (long operationClaimId in request.OperationClaimIds)
-        {       
-            mappedUserOperationClaim.OperationClaimId = operationClaimId;   
-            userOperationClaim = await _userOperationClaimRepository.AddAsync(mappedUserOperationClaim);
-        }
+        UserOperationClaim userOperationClaim = await _userOperationClaimRepository.AddAsync(mappedUserOperationClaim);
         return ServiceResponse<UserOperationClaim>.SuccessDataWithMessage(userOperationClaim, Messages.Success);
     }
 }

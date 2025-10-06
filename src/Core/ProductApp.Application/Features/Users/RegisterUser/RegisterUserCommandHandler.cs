@@ -1,7 +1,6 @@
 ﻿using MediatR;
 using ProductApp.Application.Common;
 using ProductApp.Application.Exceptions;
-using ProductApp.Application.Features.UserOperationClaims.CreateUserOperationClaim;
 using ProductApp.Application.Features.Users.CreateUser;
 using ProductApp.Application.Features.Users.GetAllWithFilterUsers;
 using ProductApp.Application.Helpers;
@@ -43,12 +42,6 @@ public class RegisterUserCommandHandler : ICommandHandler<RegisterUserCommand, b
 
         ServiceResponse<User> serviceResponseUser = await _mediator.Send(new CreateUserCommand() { UserName = user.UserName, Email = user.Email, Name = user.Name, SurName = user.SurName, PasswordHash = user.PasswordHash, PasswordSalt = user.PasswordSalt }, cancellationToken);
         if (!serviceResponseUser.IsSuccess)
-        {
-            return ServiceResponse<bool>.FailureDataWithMessage(Messages.Error, new Error(MessageCode.Error, Messages.Error));
-        }
-
-        ServiceResponse<UserOperationClaim> serviceResponseUserOperationClaim = await _mediator.Send(new CreateUserOperationClaimCommand() { OperationClaimIds = request.OperationClaimIds, UserId = serviceResponseUser.Data.Id }, cancellationToken);
-        if (!serviceResponseUserOperationClaim.IsSuccess)
         {
             return ServiceResponse<bool>.FailureDataWithMessage(Messages.Error, new Error(MessageCode.Error, Messages.Error));
         }

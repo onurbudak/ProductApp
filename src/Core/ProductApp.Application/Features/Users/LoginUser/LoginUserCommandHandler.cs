@@ -41,6 +41,10 @@ public class LoginUserCommandHandler : ICommandHandler<LoginUserCommand, AccessT
         RefreshToken refreshToken = _tokenService.GenerateRefreshToken();
         refreshToken.UserId = currentUser.Id;
         ServiceResponse<RefreshToken> serviceResponseRefreshToken = await _mediator.Send(new CreateRefreshTokenCommand() { Expires = refreshToken.Expires, Token = refreshToken.Token }, cancellationToken);
+        if (!serviceResponseRefreshToken.IsSuccess)
+        {
+            return ServiceResponse<AccessToken>.FailureDataWithMessage(Messages.Error, new Error(MessageCode.Error, Messages.Error));
+        }
 
         return ServiceResponse<AccessToken>.SuccessDataWithMessage(new AccessToken() { RefreshToken = refreshToken.Token, Token = accessToken }, Messages.Success);
     }
