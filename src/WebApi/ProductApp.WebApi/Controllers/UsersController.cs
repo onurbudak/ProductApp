@@ -49,16 +49,16 @@ public class UsersController : ControllerBase
     /// <summary>
     /// GetById
     /// </summary>
-    /// <param name="request"></param>
+    /// <param name="id"></param>
     /// <returns></returns>
     [Produces("application/json", "text/plain")]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ServiceResponse<UserViewDto>))]
     [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ServiceResponse<UserViewDto>))]
     [HttpGet("[action]/{id}")]
     [Authorize]
-    public async Task<IActionResult> GetById([FromRoute] GetByIdUserQuery request)
+    public async Task<IActionResult> GetById([FromRoute] long id)
     {
-        var response = await _mediator.Send(request);
+        var response = await _mediator.Send(new GetByIdUserQuery() { Id = id });
         return response.IsSuccess ? Ok(response) : BadRequest(response);
     }
 

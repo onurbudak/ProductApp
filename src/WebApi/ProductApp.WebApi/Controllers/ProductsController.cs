@@ -49,16 +49,16 @@ public class ProductsController : ControllerBase
     /// <summary>
     /// GetById
     /// </summary>
-    /// <param name="request"></param>
+    /// <param name="id"></param>
     /// <returns></returns>
     [Produces("application/json", "text/plain")]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ServiceResponse<ProductViewDto>))]
     [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ServiceResponse<ProductViewDto>))]
     [HttpGet("[action]/{id}")]
     [Authorize]
-    public async Task<IActionResult> GetById([FromRoute] GetByIdProductQuery request)
+    public async Task<IActionResult> GetById([FromRoute] long id)
     {
-        var response = await _mediator.Send(request);
+        var response = await _mediator.Send(new GetByIdProductQuery() { Id = id });
         return response.IsSuccess ? Ok(response) : BadRequest(response);
     }
 

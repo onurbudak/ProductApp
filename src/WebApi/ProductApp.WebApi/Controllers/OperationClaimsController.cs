@@ -49,16 +49,16 @@ public class OperationClaimsController : ControllerBase
     /// <summary>
     /// GetById
     /// </summary>
-    /// <param name="request"></param>
+    /// <param name="id"></param>
     /// <returns></returns>
     [Produces("application/json", "text/plain")]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ServiceResponse<OperationClaimViewDto>))]
     [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ServiceResponse<OperationClaimViewDto>))]
     [HttpGet("[action]/{id}")]
     [Authorize]
-    public async Task<IActionResult> GetById([FromRoute] GetByIdOperationClaimQuery request)
+    public async Task<IActionResult> GetById([FromRoute] long id)
     {
-        var response = await _mediator.Send(request);
+        var response = await _mediator.Send(new GetByIdOperationClaimQuery() {Id = id });
         return response.IsSuccess ? Ok(response) : BadRequest(response);
     }
 
