@@ -1,14 +1,14 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using ProductApp.Application.Features.Commands.Users.CreateUser;
-using ProductApp.Application.Features.Commands.Users.DeleteUser;
-using ProductApp.Application.Features.Commands.Users.UpdateUser;
-using ProductApp.Application.Features.Queries.Users.GetAllUsers;
-using ProductApp.Application.Features.Queries.Users.GetByIdUser;
-using ProductApp.Application.Features.Queries.Users.GetAllWithFilterUsers;
 using ProductApp.Application.Wrappers;
 using ProductApp.Domain.Dto;
+using ProductApp.Application.Features.Users.CreateUser;
+using ProductApp.Application.Features.Users.DeleteUser;
+using ProductApp.Application.Features.Users.UpdateUser;
+using ProductApp.Application.Features.Users.GetAllWithFilterUsers;
+using ProductApp.Application.Features.Users.GetAllUsers;
+using ProductApp.Application.Features.Users.GetByIdUser;
 
 namespace ProductApp.WebApi.Controllers;
 

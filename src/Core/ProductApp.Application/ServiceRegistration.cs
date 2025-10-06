@@ -4,6 +4,7 @@ using Microsoft.Extensions.DependencyInjection;
 using ProductApp.Application.Filters;
 using ProductApp.Application.Interfaces.Filters;
 using ProductApp.Application.Interfaces.Queues;
+using ProductApp.Application.Interfaces.Services;
 using ProductApp.Application.Queues;
 using ProductApp.Application.Services;
 using ProductApp.Domain.Entities;

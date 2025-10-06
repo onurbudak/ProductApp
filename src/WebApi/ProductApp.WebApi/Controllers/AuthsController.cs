@@ -1,9 +1,9 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using ProductApp.Application.Features.Commands.Users.LoginUser;
-using ProductApp.Application.Features.Commands.Users.RegisterUser;
-using ProductApp.Application.Services;
+using ProductApp.Application.Common;
+using ProductApp.Application.Features.Users.LoginUser;
+using ProductApp.Application.Features.Users.RegisterUser;
 using ProductApp.Application.Wrappers;
 
 namespace ProductApp.WebApi.Controllers;

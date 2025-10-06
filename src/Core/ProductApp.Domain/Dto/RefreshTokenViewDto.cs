@@ -1,11 +1,11 @@
-﻿using ProductApp.Domain.Entities;
+﻿using ProductApp.Domain.Common;
 
 namespace ProductApp.Domain.Dto;
 
-public class RefreshTokenViewDto
+public class RefreshTokenViewDto : IDto
 {
     public long Id { get; set; }
-    public string Token { get; set; }
+    public required string Token { get; set; }
     public DateTime Expires { get; set; }
     public bool IsExpired => DateTime.UtcNow >= Expires;
     public bool IsActive => !IsExpired;

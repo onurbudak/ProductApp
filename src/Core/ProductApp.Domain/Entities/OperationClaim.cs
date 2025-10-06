@@ -4,6 +4,6 @@ namespace ProductApp.Domain.Entities;
 
 public class OperationClaim : BaseEntity<long>
 {
-    public string Name { get; set; }
+    public required string Name { get; set; }
 
 }

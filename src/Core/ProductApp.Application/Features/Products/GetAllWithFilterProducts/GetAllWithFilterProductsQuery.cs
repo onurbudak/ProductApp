@@ -1,0 +1,14 @@
+﻿using ProductApp.Application.Interfaces.Messages;
+using ProductApp.Domain.Dto;
+
+namespace ProductApp.Application.Features.Products.GetAllWithFilterProducts;
+
+public class GetAllWithFilterProductsQuery : IPaginatedQuery<List<ProductViewDto>>
+{
+    public int PageSize { get; set; }
+    public int PageNumber { get; set; }
+    public string? Name { get; set; }
+    public decimal? Value { get; set; }
+    public long? Quantity { get; set; }
+    public short? Status { get; set; }
+}

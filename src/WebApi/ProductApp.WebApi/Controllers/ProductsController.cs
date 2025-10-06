@@ -1,14 +1,14 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using ProductApp.Application.Features.Commands.Products.CreateProduct;
-using ProductApp.Application.Features.Commands.Products.DeleteProduct;
-using ProductApp.Application.Features.Commands.Products.UpdateProduct;
-using ProductApp.Application.Features.Queries.Products.GetAllProducts;
-using ProductApp.Application.Features.Queries.Products.GetByIdProduct;
-using ProductApp.Application.Features.Queries.Products.GetAllWithFilterProducts;
 using ProductApp.Application.Wrappers;
 using ProductApp.Domain.Dto;
+using ProductApp.Application.Features.Products.CreateProduct;
+using ProductApp.Application.Features.Products.DeleteProduct;
+using ProductApp.Application.Features.Products.UpdateProduct;
+using ProductApp.Application.Features.Products.GetByIdProduct;
+using ProductApp.Application.Features.Products.GetAllWithFilterProducts;
+using ProductApp.Application.Features.Products.GetAllProducts;
 
 namespace ProductApp.WebApi.Controllers;
 

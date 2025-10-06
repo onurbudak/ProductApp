@@ -1,0 +1,27 @@
+﻿using AutoMapper;
+using ProductApp.Application.Common;
+using ProductApp.Application.Interfaces.Messages;
+using ProductApp.Application.Interfaces.Repositories;
+using ProductApp.Application.Wrappers;
+using ProductApp.Domain.Entities;
+
+namespace ProductApp.Application.Features.Products.CreateProduct;
+
+public class CreateProductCommandHandler : ICommandHandler<CreateProductCommand, Product>
+{
+    private readonly IProductRepository _productRepository;
+    private readonly IMapper _mapper;
+
+    public CreateProductCommandHandler(IProductRepository productRepository, IMapper mapper)
+    {
+        _productRepository = productRepository;
+        _mapper = mapper;
+    } 
+    public async Task<ServiceResponse<Product>> Handle(CreateProductCommand request, CancellationToken cancellationToken)
+    {
+        Product mappedProduct = _mapper.Map<Product>(request);
+        Product product = await _productRepository.AddAsync(mappedProduct);
+        return ServiceResponse<Product>.SuccessDataWithMessage(product, Messages.Success);
+    }
+}
+

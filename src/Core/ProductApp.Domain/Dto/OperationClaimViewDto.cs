@@ -1,7 +1,9 @@
-﻿namespace ProductApp.Domain.Dto;
+﻿using ProductApp.Domain.Common;
 
-public class OperationClaimViewDto
+namespace ProductApp.Domain.Dto;
+
+public class OperationClaimViewDto : IDto
 {
     public long Id { get; set; }
-    public string Name { get; set; }
+    public required string Name { get; set; }
 }

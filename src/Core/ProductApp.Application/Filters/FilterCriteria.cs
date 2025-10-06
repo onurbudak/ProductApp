@@ -2,8 +2,8 @@
 
 public class FilterCriteria
 {
-    public string Field { get; set; }     
-    public string Operator { get; set; }  
-    public object Value { get; set; }   
+    public required string Field { get; set; }     
+    public required string Operator { get; set; }  
+    public required object Value { get; set; }   
 }
 

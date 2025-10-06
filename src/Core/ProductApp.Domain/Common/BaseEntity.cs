@@ -1,12 +1,12 @@
 ﻿namespace ProductApp.Domain.Common;
 
-public class BaseEntity<TId> where TId : notnull
+public class BaseEntity<TId> : IEntity where TId : notnull
 {
     public TId Id { get; set; }
 
     public DateTime CreateDate { get; set; }
 
-    public long CreateUserId { get; set; } 
+    public long CreateUserId { get; set; }
 
     public DateTime? UpdateDate { get; set; }
 

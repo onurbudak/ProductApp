@@ -1,5 +1,4 @@
 ﻿using System.Text;
-using System.Threading.Channels;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using ProductApp.Application.Common;
@@ -87,7 +86,7 @@ public class RabbitMqFactory : IRabbitMqFactory
             _logger.LogInformation("Received Message: {Message}", message);
 
             BasicProperties basicProperties = new BasicProperties();
-            await Channel.BasicPublishAsync(exchange: "", routingKey: _settings?.RabbitMq?.ProductQueueName ?? string.Empty, mandatory: true, basicProperties: basicProperties, body: body, cancellationToken);
+            await Channel.BasicPublishAsync(exchange: exchange, routingKey: _settings?.RabbitMq?.ProductQueueName ?? string.Empty, mandatory: true, basicProperties: basicProperties, body: body, cancellationToken);
 
             await Channel.BasicAckAsync(deliveryTag, false, cancellationToken);
         }

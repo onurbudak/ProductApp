@@ -2,14 +2,14 @@
 using MassTransit;
 using ProductApp.Application.Interfaces.Repositories;
 using ProductApp.Domain.Entities;
-using ProductApp.Application.Common;
 using Microsoft.Extensions.Logging;
 using System.Diagnostics;
 using MassTransit.Metadata;
+using ProductApp.Application.Events;
 
 namespace ProductApp.Application.Consumers;
 
-public class ProductMessageConsumer : IConsumer<ProductMessage>
+public class ProductMessageConsumer : IConsumer<UpdateProductEvent>
 {
     private readonly IProductRepository _productRepository;
     private readonly IMapper _mapper;
@@ -21,26 +21,26 @@ public class ProductMessageConsumer : IConsumer<ProductMessage>
         _mapper = mapper;
         _logger = logger;
     }
-    public async Task Consume(ConsumeContext<ProductMessage> context)
+    public async Task Consume(ConsumeContext<UpdateProductEvent> context)
     {
         try
         {
             Console.WriteLine($"ProductMessageConsumer Started");
             _logger.LogInformation($"ProductMessageConsumer Started");
 
-            ProductMessage productMessage = context.Message;
+            UpdateProductEvent updateProductEvent = context.Message;
 
-            Console.WriteLine($"ProductMessageConsumer received Status : {productMessage.Status}");
-            _logger.LogInformation("ProductMessageConsumer received Status : {Status}", productMessage.Status);
+            Console.WriteLine($"ProductMessageConsumer received Status : {updateProductEvent.Status}");
+            _logger.LogInformation("ProductMessageConsumer received Status : {Status}", updateProductEvent.Status);
 
             Stopwatch timer = Stopwatch.StartNew();
 
             var status = 9999 + 9999 + 9999 + 9999 + 9999 + 9999 + 9999 + 999999999999;
-            productMessage.Status = Convert.ToInt16(status);
+            updateProductEvent.Status = Convert.ToInt16(status);
 
-            productMessage.Status += 1;
+            updateProductEvent.Status += 1;
 
-            Product? mappedProduct = _mapper.Map<Product>(productMessage);
+            Product? mappedProduct = _mapper.Map<Product>(updateProductEvent);
             await _productRepository.UpdateAsync(mappedProduct);
             await context.NotifyConsumed(timer.Elapsed, TypeMetadataCache<Product>.ShortName);
             timer.Stop();

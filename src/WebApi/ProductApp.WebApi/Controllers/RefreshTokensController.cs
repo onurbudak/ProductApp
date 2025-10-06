@@ -1,14 +1,14 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using ProductApp.Application.Features.Commands.RefreshTokens.CreateRefreshToken;
-using ProductApp.Application.Features.Commands.RefreshTokens.DeleteRefreshToken;
-using ProductApp.Application.Features.Commands.RefreshTokens.UpdateRefreshToken;
-using ProductApp.Application.Features.Queries.RefreshTokens.GetAllRefreshTokens;
-using ProductApp.Application.Features.Queries.RefreshTokens.GetByIdRefreshToken;
-using ProductApp.Application.Features.Queries.RefreshTokens.GetAllWithFilterRefreshTokens;
 using ProductApp.Application.Wrappers;
 using ProductApp.Domain.Dto;
+using ProductApp.Application.Features.RefreshTokens.CreateRefreshToken;
+using ProductApp.Application.Features.RefreshTokens.DeleteRefreshToken;
+using ProductApp.Application.Features.RefreshTokens.UpdateRefreshToken;
+using ProductApp.Application.Features.RefreshTokens.GetAllWithFilterRefreshTokens;
+using ProductApp.Application.Features.RefreshTokens.GetAllRefreshTokens;
+using ProductApp.Application.Features.RefreshTokens.GetByIdRefreshToken;
 
 namespace ProductApp.WebApi.Controllers;
 

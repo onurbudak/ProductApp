@@ -1,14 +1,14 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using ProductApp.Application.Features.Commands.UserOperationClaims.CreateUserOperationClaim;
-using ProductApp.Application.Features.Commands.UserOperationClaims.DeleteUserOperationClaim;
-using ProductApp.Application.Features.Commands.UserOperationClaims.UpdateUserOperationClaim;
-using ProductApp.Application.Features.Queries.UserOperationClaims.GetAllUserOperationClaims;
-using ProductApp.Application.Features.Queries.UserOperationClaims.GetByIdUserOperationClaim;
-using ProductApp.Application.Features.Queries.UserOperationClaims.GetAllWithFilterUserOperationClaims;
 using ProductApp.Application.Wrappers;
 using ProductApp.Domain.Dto;
+using ProductApp.Application.Features.UserOperationClaims.CreateUserOperationClaim;
+using ProductApp.Application.Features.UserOperationClaims.DeleteUserOperationClaim;
+using ProductApp.Application.Features.UserOperationClaims.UpdateUserOperationClaim;
+using ProductApp.Application.Features.UserOperationClaims.GetAllWithFilterUserOperationClaims;
+using ProductApp.Application.Features.UserOperationClaims.GetByIdUserOperationClaim;
+using ProductApp.Application.Features.UserOperationClaims.GetAllUserOperationClaims;
 
 namespace ProductApp.WebApi.Controllers;
 

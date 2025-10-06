@@ -26,10 +26,8 @@ builder.Host.UseSerilog((_, loggerConfiguration) => loggerConfiguration.WriteTo.
 
 builder.Services.AddMassTransit(x =>
 {
-    // RabbitMQ ile bağlantıyı kuruyoruz
     x.UsingRabbitMq((context, cfg) =>
     {
-        // RabbitMQ sunucusuna bağlantı bilgilerini ekliyoruz
         cfg.Host(host, h =>
         {
             h.Username(username);
@@ -56,7 +54,6 @@ builder.Services
 //    options.JsonSerializerOptions.DefaultIgnoreCondition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull;
 //});
 
-// Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
 
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
@@ -88,7 +85,6 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             },
             OnMessageReceived = context =>
             {
-                // Örn: token query string veya header'dan okunabilir
                 var token = context.Request.Headers["Authorization"];
                 if (!string.IsNullOrEmpty(token))
                 {
@@ -111,7 +107,7 @@ builder.Services.AddSwaggerGen(opt =>
 {
     opt.SwaggerDoc("v1", new OpenApiInfo
     {
-        Title = "Auth API",
+        Title = "ProductApp API",
         Version = "v1",
         Description = "JWT"
     });
@@ -124,7 +120,7 @@ builder.Services.AddSwaggerGen(opt =>
         Scheme = "bearer",
         BearerFormat = "JWT",
         In = ParameterLocation.Header,
-        Description = "JWT token'ı 'Bearer {token}' formatında girin."
+        Description = "JWT token'ı Bearer eklemeden '{token}' formatında girin."
     });
 
     // JWT Bearer Security Requirement
@@ -146,7 +142,7 @@ builder.Services.AddSwaggerGen(opt =>
 
 builder.Services.AddResponseCompression(options =>
 {
-    options.EnableForHttps = true; // HTTPS yanıtlarında da sıkıştırmayı aç
+    options.EnableForHttps = true; 
 });
 
 var app = builder.Build();
@@ -175,8 +171,8 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI(options =>
     {
-        options.SwaggerEndpoint("/swagger/v1/swagger.json", "My API v1");
-        options.RoutePrefix = string.Empty; // Swagger UI root path'e gelsin (/)
+        options.SwaggerEndpoint("/swagger/v1/swagger.json", "ProductApp API v1");
+        options.RoutePrefix = string.Empty; 
     });
 }
 

@@ -1,6 +1,7 @@
 ﻿using System.Net;
 using System.Text;
 using System.Text.Json;
+using ProductApp.Application.Exceptions;
 using ProductApp.Application.Wrappers;
 
 namespace ProductApp.WebApi.Middlewares;
@@ -27,11 +28,9 @@ public class ErrorHandlerMiddleware
             string method = httpContext.Request.Method;
             PathString path = httpContext.Request.Path;
             string requestBody = await ReadRequestBody(httpContext.Request);
-
             _logger.LogError(ex,
                 "{Method} {Path} \nBody: {Body} \nMessage: {Message}",
                 method, path, requestBody, ex.Message);
-
             await HandleExceptionAsync(httpContext, ex);
         }
     }
@@ -40,33 +39,55 @@ public class ErrorHandlerMiddleware
     {
         request.EnableBuffering();
         request.Body.Position = 0;
-
         using var reader = new StreamReader(
             request.Body,
             encoding: Encoding.UTF8,
             detectEncodingFromByteOrderMarks: false,
             leaveOpen: true);
-
         string body = await reader.ReadToEndAsync();
         request.Body.Position = 0;
-
         return body;
     }
 
-    private static Task HandleExceptionAsync(HttpContext httpContext, Exception exception)
+    private static async Task HandleExceptionAsync(HttpContext httpContext, Exception exception)
+    {
+        switch (exception)
+        {
+            case UnauthorizedException unauthorizedException:
+                await HandleUnauthorizedExceptionAsync(httpContext, (UnauthorizedException)exception);
+                break;
+
+            default:
+                await HandleGenericExceptionAsync(httpContext, exception);
+                break;
+        }
+    }
+
+    private static Task HandleUnauthorizedExceptionAsync(HttpContext httpContext, UnauthorizedException exception)
+    {
+        httpContext.Response.ContentType = "application/json";
+        httpContext.Response.StatusCode = (int)HttpStatusCode.Unauthorized;
+        var errorResponse = new ErrorResponse
+        {
+            IsSuccess = false,
+            StatusCode = httpContext.Response.StatusCode,
+            Message = exception.Message
+        };
+        string json = JsonSerializer.Serialize(errorResponse);
+        return httpContext.Response.WriteAsync(json);
+    }
+
+    private static Task HandleGenericExceptionAsync(HttpContext httpContext, Exception exception)
     {
         httpContext.Response.ContentType = "application/json";
         httpContext.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
-
         var errorResponse = new ErrorResponse
         {
             IsSuccess = false,
             StatusCode = httpContext.Response.StatusCode,
             Message = "Internal Server Error. Please try again later."
         };
-
         string json = JsonSerializer.Serialize(errorResponse);
-
         return httpContext.Response.WriteAsync(json);
     }
 }

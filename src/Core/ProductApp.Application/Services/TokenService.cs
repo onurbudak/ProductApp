@@ -5,6 +5,7 @@ using System.Text;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using ProductApp.Application.Common;
+using ProductApp.Application.Interfaces.Services;
 using ProductApp.Domain.Entities;
 
 namespace ProductApp.Application.Services;
@@ -30,8 +31,9 @@ public class TokenService : ITokenService
 
         var claims = new List<Claim>
         {
-            new Claim(JwtRegisteredClaimNames.Sub, user.Id.ToString()),
-            new Claim(JwtRegisteredClaimNames.UniqueName, user.UserName),
+            new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
+            new Claim(ClaimTypes.Name, user.UserName),
+            new Claim(ClaimTypes.Email, user.Email),
             new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
         };
 
@@ -45,7 +47,8 @@ public class TokenService : ITokenService
             audience: _settings?.JwtSettings?.Audience ?? string.Empty,
             claims: claims,
             expires: DateTime.UtcNow.AddMinutes(_settings?.JwtSettings?.TokenExpirationMinutes ?? 0),
-            signingCredentials: creds 
+            signingCredentials: creds ,
+            notBefore: DateTime.UtcNow
         );
 
         return new JwtSecurityTokenHandler().WriteToken(token);

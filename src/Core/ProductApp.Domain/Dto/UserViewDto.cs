@@ -1,10 +1,14 @@
-﻿namespace ProductApp.Domain.Dto;
+﻿using ProductApp.Domain.Common;
 
-public class UserViewDto
+namespace ProductApp.Domain.Dto;
+
+public class UserViewDto : IDto
 {
     public long Id { get; set; }
-    public string Name { get; set; }
-    public string SurName { get; set; }
-    public string Email { get; set; }
-    public string UserName { get; set; }
+    public required string Name { get; set; }
+    public required string SurName { get; set; }
+    public required string Email { get; set; }
+    public required string UserName { get; set; }
+    public byte[] PasswordSalt { get; set; } = [];
+    public byte[] PasswordHash { get; set; } = [];
 }
