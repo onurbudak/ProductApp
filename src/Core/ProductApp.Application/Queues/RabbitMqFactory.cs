@@ -85,7 +85,7 @@ public class RabbitMqFactory : IRabbitMqFactory
             Console.WriteLine("Received Message: {message}");
             _logger.LogInformation("Received Message: {Message}", message);
 
-            BasicProperties basicProperties = new BasicProperties();
+            //BasicProperties basicProperties = new BasicProperties();
             //await Channel.BasicPublishAsync(exchange: exchange, routingKey: _settings?.RabbitMq?.ProductQueueName ?? string.Empty, mandatory: true, basicProperties: basicProperties, body: body, cancellationToken);
 
             await Channel.BasicAckAsync(deliveryTag, false, cancellationToken);
