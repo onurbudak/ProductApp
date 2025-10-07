@@ -9,13 +9,13 @@ using ProductApp.Application.Events;
 
 namespace ProductApp.Application.Consumers;
 
-public class ProductMessageConsumer : IConsumer<UpdateProductEvent>
+public class UpdateProductConsumer : IConsumer<UpdateProductEvent>
 {
     private readonly IProductRepository _productRepository;
     private readonly IMapper _mapper;
-    private readonly ILogger<ProductMessageConsumer> _logger;
+    private readonly ILogger<UpdateProductConsumer> _logger;
 
-    public ProductMessageConsumer(IProductRepository productRepository, IMapper mapper, ILogger<ProductMessageConsumer> logger)
+    public UpdateProductConsumer(IProductRepository productRepository, IMapper mapper, ILogger<UpdateProductConsumer> logger)
     {
         _productRepository = productRepository;
         _mapper = mapper;
@@ -25,13 +25,13 @@ public class ProductMessageConsumer : IConsumer<UpdateProductEvent>
     {
         try
         {
-            Console.WriteLine($"ProductMessageConsumer Started");
-            _logger.LogInformation($"ProductMessageConsumer Started");
+            Console.WriteLine($"UpdateProductConsumer Started");
+            _logger.LogInformation($"UpdateProductConsumer Started");
 
             UpdateProductEvent updateProductEvent = context.Message;
 
-            Console.WriteLine($"ProductMessageConsumer received Status : {updateProductEvent.Status}");
-            _logger.LogInformation("ProductMessageConsumer received Status : {Status}", updateProductEvent.Status);
+            Console.WriteLine($"UpdateProductConsumer received Status : {updateProductEvent.Status}");
+            _logger.LogInformation("UpdateProductConsumer received Status : {Status}", updateProductEvent.Status);
 
             Stopwatch timer = Stopwatch.StartNew();
 
@@ -45,13 +45,13 @@ public class ProductMessageConsumer : IConsumer<UpdateProductEvent>
             await context.NotifyConsumed(timer.Elapsed, TypeMetadataCache<Product>.ShortName);
             timer.Stop();
 
-            Console.WriteLine($"ProductMessageConsumer Finished");
-            _logger.LogInformation($"ProductMessageConsumer Finished");
+            Console.WriteLine($"UpdateProductConsumer Finished");
+            _logger.LogInformation($"UpdateProductConsumer Finished");
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"ProductMessageConsumer Error : {ex}");
-            _logger.LogError(ex, "ProductMessageConsumer Error");
+            Console.WriteLine($"Error UpdateProductConsumer : {ex}");
+            _logger.LogError(ex, "Error UpdateProductConsumer");
             throw;
         }
     }

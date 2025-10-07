@@ -6,14 +6,14 @@ using Quartz;
 
 namespace ProductApp.Application.Jobs;
 
-public class ProductMessageJob : IJob
+public class UpdateProductJob : IJob
 {
     private readonly IRabbitMqFactory _rabbitMqFactory;
-    private readonly ILogger<ProductMessageJob> _logger;
+    private readonly ILogger<UpdateProductJob> _logger;
     private readonly AppSettings _settings;
 
 
-    public ProductMessageJob(IRabbitMqFactory rabbitMqFactory, ILogger<ProductMessageJob> logger, IOptions<AppSettings> options)
+    public UpdateProductJob(IRabbitMqFactory rabbitMqFactory, ILogger<UpdateProductJob> logger, IOptions<AppSettings> options)
     {
         _rabbitMqFactory = rabbitMqFactory;
         _logger = logger;
@@ -24,14 +24,14 @@ public class ProductMessageJob : IJob
     {
         try
         {
-            Console.WriteLine($"ProductMessageJob Started");
-            _logger.LogInformation("ProductMessageJob Started");
+            Console.WriteLine($"UpdateProductJob Started");
+            _logger.LogInformation("UpdateProductJob Started");
             await _rabbitMqFactory.ConsumeAsync(_settings?.RabbitMq?.Host ?? string.Empty, _settings?.RabbitMq?.ProductQueueErrorName ?? string.Empty);
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"ProductMessageJob Error : {ex}");
-            _logger.LogError(ex, "ProductMessageJob Error");
+            Console.WriteLine($"Error UpdateProductJob : {ex}");
+            _logger.LogError(ex, "Error UpdateProductJob");
             throw;
         }
     }

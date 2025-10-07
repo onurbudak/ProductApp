@@ -1,14 +1,15 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using ProductApp.Application.Wrappers;
-using ProductApp.Domain.Dto;
 using ProductApp.Application.Features.RefreshTokens.CreateRefreshToken;
 using ProductApp.Application.Features.RefreshTokens.DeleteRefreshToken;
-using ProductApp.Application.Features.RefreshTokens.UpdateRefreshToken;
-using ProductApp.Application.Features.RefreshTokens.GetAllWithFilterRefreshTokens;
 using ProductApp.Application.Features.RefreshTokens.GetAllRefreshTokens;
+using ProductApp.Application.Features.RefreshTokens.GetAllWithFilterRefreshTokens;
 using ProductApp.Application.Features.RefreshTokens.GetByIdRefreshToken;
+using ProductApp.Application.Features.RefreshTokens.UpdateRefreshToken;
+using ProductApp.Application.Wrappers;
+using ProductApp.Domain.Dto;
+using ProductApp.Domain.Entities;
 
 namespace ProductApp.WebApi.Controllers;
 
@@ -84,8 +85,8 @@ public class RefreshTokensController : ControllerBase
     /// <param name="request"></param>
     /// <returns></returns>
     [Produces("application/json", "text/plain")]
-    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ServiceResponse<bool>))]
-    [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ServiceResponse<bool>))]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ServiceResponse<RefreshToken>))]
+    [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ServiceResponse<RefreshToken>))]
     [HttpPost("[action]")]
     [Authorize]
     public async Task<IActionResult> Add([FromBody] CreateRefreshTokenCommand request)
@@ -100,8 +101,8 @@ public class RefreshTokensController : ControllerBase
     /// <param name="request"></param>
     /// <returns></returns>
     [Produces("application/json", "text/plain")]
-    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ServiceResponse<bool>))]
-    [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ServiceResponse<bool>))]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ServiceResponse<RefreshToken>))]
+    [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ServiceResponse<RefreshToken>))]
     [HttpPut("[action]")]
     [Authorize]
     public async Task<IActionResult> Update([FromBody] UpdateRefreshTokenCommand request)

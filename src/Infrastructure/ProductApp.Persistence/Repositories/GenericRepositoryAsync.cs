@@ -55,8 +55,6 @@ public class GenericRepositoryAsync<TEntity, TId> : IGenericRepositoryAsync<TEnt
         return existingEntity;
     }
 
-    public async Task<List<TEntity>> GetAllWithFilterAsync(Expression<Func<TEntity, bool>> filter) => await _dbContext.Set<TEntity>().Where(filter).ToListAsync();
-
     public IQueryable<TEntity> Query()
     {
         return _dbContext.Set<TEntity>().AsQueryable();

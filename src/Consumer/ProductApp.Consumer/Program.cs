@@ -35,7 +35,7 @@ builder.Services.AddPersistenceRegistration(builder.Configuration);
 builder.Services.AddMassTransit(x =>
 {
     //Consumer'ı ekliyoruz
-    x.AddConsumer<ProductMessageConsumer>();
+    x.AddConsumer<UpdateProductConsumer>();
 
     // RabbitMQ ile bağlantıyı kuruyoruz
     x.UsingRabbitMq((context, cfg) =>
@@ -50,7 +50,7 @@ builder.Services.AddMassTransit(x =>
         //Consumer'ı dinlemek için endpoint ekliyoruz
         cfg.ReceiveEndpoint(productQueueName, e =>
         {
-            e.ConfigureConsumer<ProductMessageConsumer>(context);
+            e.ConfigureConsumer<UpdateProductConsumer>(context);
             e.UseMessageRetry(r => r.Interval(massTransitRetryCount, TimeSpan.FromSeconds(massTransitInterval)));
             e.UseInMemoryOutbox(context);
         });
@@ -75,9 +75,7 @@ builder.Services.AddLogging(configure =>
 builder.Services.AddQuartz(q =>
 {
     var jobKey = new JobKey(quartzJobName);
-
-    q.AddJob<ProductMessageJob>(opts => opts.WithIdentity(jobKey));
-
+    q.AddJob<UpdateProductJob>(opts => opts.WithIdentity(jobKey));
     q.AddTrigger(opts => opts
         .ForJob(jobKey)
         .WithIdentity(quartzTriggerName)

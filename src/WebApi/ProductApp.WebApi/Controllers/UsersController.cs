@@ -1,14 +1,15 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using ProductApp.Application.Wrappers;
-using ProductApp.Domain.Dto;
 using ProductApp.Application.Features.Users.CreateUser;
 using ProductApp.Application.Features.Users.DeleteUser;
-using ProductApp.Application.Features.Users.UpdateUser;
-using ProductApp.Application.Features.Users.GetAllWithFilterUsers;
 using ProductApp.Application.Features.Users.GetAllUsers;
+using ProductApp.Application.Features.Users.GetAllWithFilterUsers;
 using ProductApp.Application.Features.Users.GetByIdUser;
+using ProductApp.Application.Features.Users.UpdateUser;
+using ProductApp.Application.Wrappers;
+using ProductApp.Domain.Dto;
+using ProductApp.Domain.Entities;
 
 namespace ProductApp.WebApi.Controllers;
 
@@ -84,8 +85,8 @@ public class UsersController : ControllerBase
     /// <param name="request"></param>
     /// <returns></returns>
     [Produces("application/json", "text/plain")]
-    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ServiceResponse<bool>))]
-    [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ServiceResponse<bool>))]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ServiceResponse<User>))]
+    [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ServiceResponse<User>))]
     [HttpPost("[action]")]
     [Authorize]
     public async Task<IActionResult> Add([FromBody] CreateUserCommand request)
@@ -100,8 +101,8 @@ public class UsersController : ControllerBase
     /// <param name="request"></param>
     /// <returns></returns>
     [Produces("application/json", "text/plain")]
-    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ServiceResponse<bool>))]
-    [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ServiceResponse<bool>))]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ServiceResponse<User>))]
+    [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ServiceResponse<User>))]
     [HttpPut("[action]")]
     [Authorize]
     public async Task<IActionResult> Update([FromBody] UpdateUserCommand request)

@@ -1,5 +1,4 @@
-﻿using System.Linq.Expressions;
-using ProductApp.Domain.Common;
+﻿using ProductApp.Domain.Common;
 
 namespace ProductApp.Application.Interfaces.Repositories;
 
@@ -10,6 +9,5 @@ public interface IGenericRepositoryAsync<TEntity, TId> where TEntity : BaseEntit
     Task<TEntity> AddAsync(TEntity entity);
     Task<TEntity?> UpdateAsync(TEntity entity);
     Task<TEntity?> DeleteAsync(TEntity entity);
-    Task<List<TEntity>> GetAllWithFilterAsync(Expression<Func<TEntity, bool>> filter);
     IQueryable<TEntity> Query(); 
 }

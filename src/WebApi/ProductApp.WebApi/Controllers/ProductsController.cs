@@ -1,14 +1,15 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using ProductApp.Application.Wrappers;
-using ProductApp.Domain.Dto;
 using ProductApp.Application.Features.Products.CreateProduct;
 using ProductApp.Application.Features.Products.DeleteProduct;
-using ProductApp.Application.Features.Products.UpdateProduct;
-using ProductApp.Application.Features.Products.GetByIdProduct;
-using ProductApp.Application.Features.Products.GetAllWithFilterProducts;
 using ProductApp.Application.Features.Products.GetAllProducts;
+using ProductApp.Application.Features.Products.GetAllWithFilterProducts;
+using ProductApp.Application.Features.Products.GetByIdProduct;
+using ProductApp.Application.Features.Products.UpdateProduct;
+using ProductApp.Application.Wrappers;
+using ProductApp.Domain.Dto;
+using ProductApp.Domain.Entities;
 
 namespace ProductApp.WebApi.Controllers;
 
@@ -84,8 +85,8 @@ public class ProductsController : ControllerBase
     /// <param name="request"></param>
     /// <returns></returns>
     [Produces("application/json", "text/plain")]
-    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ServiceResponse<bool>))]
-    [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ServiceResponse<bool>))]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ServiceResponse<Product>))]
+    [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ServiceResponse<Product>))]
     [HttpPost("[action]")]
     [Authorize]
     public async Task<IActionResult> Add([FromBody] CreateProductCommand request)
@@ -100,8 +101,8 @@ public class ProductsController : ControllerBase
     /// <param name="request"></param>
     /// <returns></returns>
     [Produces("application/json", "text/plain")]
-    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ServiceResponse<bool>))]
-    [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ServiceResponse<bool>))]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ServiceResponse<Product>))]
+    [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ServiceResponse<Product>))]
     [HttpPut("[action]")]
     [Authorize]
     public async Task<IActionResult> Update([FromBody] UpdateProductCommand request)

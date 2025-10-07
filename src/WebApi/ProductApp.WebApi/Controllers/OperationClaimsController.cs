@@ -1,14 +1,15 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using ProductApp.Application.Wrappers;
-using ProductApp.Domain.Dto;
 using ProductApp.Application.Features.OperationClaims.CreateOperationClaim;
 using ProductApp.Application.Features.OperationClaims.DeleteOperationClaim;
-using ProductApp.Application.Features.OperationClaims.UpdateOperationClaim;
 using ProductApp.Application.Features.OperationClaims.GetAllOperationClaims;
-using ProductApp.Application.Features.OperationClaims.GetByIdOperationClaim;
 using ProductApp.Application.Features.OperationClaims.GetAllWithFilterOperationClaims;
+using ProductApp.Application.Features.OperationClaims.GetByIdOperationClaim;
+using ProductApp.Application.Features.OperationClaims.UpdateOperationClaim;
+using ProductApp.Application.Wrappers;
+using ProductApp.Domain.Dto;
+using ProductApp.Domain.Entities;
 
 namespace ProductApp.WebApi.Controllers;
 
@@ -84,8 +85,8 @@ public class OperationClaimsController : ControllerBase
     /// <param name="request"></param>
     /// <returns></returns>
     [Produces("application/json", "text/plain")]
-    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ServiceResponse<bool>))]
-    [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ServiceResponse<bool>))]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ServiceResponse<OperationClaim>))]
+    [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ServiceResponse<OperationClaim>))]
     [HttpPost("[action]")]
     [Authorize]
     public async Task<IActionResult> Add([FromBody] CreateOperationClaimCommand request)
@@ -100,8 +101,8 @@ public class OperationClaimsController : ControllerBase
     /// <param name="request"></param>
     /// <returns></returns>
     [Produces("application/json", "text/plain")]
-    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ServiceResponse<bool>))]
-    [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ServiceResponse<bool>))]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ServiceResponse<OperationClaim>))]
+    [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ServiceResponse<OperationClaim>))]
     [HttpPut("[action]")]
     [Authorize]
     public async Task<IActionResult> Update([FromBody] UpdateOperationClaimCommand request)

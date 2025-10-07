@@ -6,5 +6,5 @@ namespace ProductApp.Application.Features.UserOperationClaims.CreateUserOperatio
 public class CreateUserOperationClaimCommand : ICommand<UserOperationClaim>
 {
     public long UserId { get; set; }
-    public List<long> OperationClaimIds { get; set; }
+    public long OperationClaimId { get; set; }
 }
