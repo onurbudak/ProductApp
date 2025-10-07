@@ -8,30 +8,41 @@ namespace ProductApp.Application.Jobs;
 
 public class UpdateProductJob : IJob
 {
-    private readonly IRabbitMqFactory _rabbitMqFactory;
+    private readonly IRabbitMqConsumer _rabbitMqConsumer;
     private readonly ILogger<UpdateProductJob> _logger;
     private readonly AppSettings _settings;
 
-
-    public UpdateProductJob(IRabbitMqFactory rabbitMqFactory, ILogger<UpdateProductJob> logger, IOptions<AppSettings> options)
+    public UpdateProductJob(
+        IRabbitMqConsumer rabbitMqConsumer,
+        ILogger<UpdateProductJob> logger,
+        IOptions<AppSettings> options)
     {
-        _rabbitMqFactory = rabbitMqFactory;
+        _rabbitMqConsumer = rabbitMqConsumer;
         _logger = logger;
         _settings = options.Value;
     }
 
     public async Task Execute(IJobExecutionContext context)
     {
+        _logger.LogInformation("UpdateProductJob started at {StartTime}", DateTime.UtcNow);
+
+        var queueName = _settings?.RabbitMq?.ProductQueueName;
+        var queueErrorName = _settings?.RabbitMq?.ProductQueueErrorName;
+
+        if (string.IsNullOrWhiteSpace(queueName) || string.IsNullOrWhiteSpace(queueErrorName))
+        {
+            _logger.LogWarning("RabbitMQ queue name is missing in configuration.");
+            return;
+        }
+
         try
         {
-            Console.WriteLine($"UpdateProductJob Started");
-            _logger.LogInformation("UpdateProductJob Started");
-            await _rabbitMqFactory.ConsumeAsync(_settings?.RabbitMq?.Host ?? string.Empty, _settings?.RabbitMq?.ProductQueueErrorName ?? string.Empty);
+            await _rabbitMqConsumer.ConsumeAsync(queueName, queueErrorName);
+            _logger.LogInformation("UpdateProductJob completed successfully at {EndTime}", DateTime.UtcNow);
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Error UpdateProductJob : {ex}");
-            _logger.LogError(ex, "Error UpdateProductJob");
+            _logger.LogError(ex, "UpdateProductJob failed at {ErrorTime}", DateTime.UtcNow);
             throw;
         }
     }

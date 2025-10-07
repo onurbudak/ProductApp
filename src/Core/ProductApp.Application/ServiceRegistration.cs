@@ -13,18 +13,22 @@ namespace ProductApp.Application;
 
 public static class ServiceRegistration
 {
-    public static void AddApplicationRegistration(this IServiceCollection services)
+    public static IServiceCollection AddApplicationRegistration(this IServiceCollection services)
     {
         var assembly = Assembly.GetExecutingAssembly();
 
         services.AddAutoMapper(assembly);
         services.AddMediatR(assembly);
-        services.AddSingleton<IRabbitMqFactory, RabbitMqFactory>();
+        services.AddSingleton<IRabbitMqConnection, RabbitMqConnection>();
+        services.AddSingleton<IRabbitMqPublisher, RabbitMqPublisher>();
+        services.AddSingleton<IRabbitMqConsumer, RabbitMqConsumer>();
         services.AddScoped<ITokenService, TokenService>();
         services.AddScoped<IFilterService<Product>, DynamicLinqFilterService<Product>>();
         services.AddScoped<IFilterService<User>, DynamicLinqFilterService<User>>();
         services.AddScoped<IFilterService<UserOperationClaim>, DynamicLinqFilterService<UserOperationClaim>>();
         services.AddScoped<IFilterService<OperationClaim>, DynamicLinqFilterService<OperationClaim>>();
         services.AddScoped<IFilterService<RefreshToken>, DynamicLinqFilterService<RefreshToken>>();
+
+        return services;
     }
 }

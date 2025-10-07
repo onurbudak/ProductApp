@@ -12,8 +12,8 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.Configure<AppSettings>(builder.Configuration.GetSection("AppSettings"));
 AppSettings? appSettings = builder.Configuration.GetSection("AppSettings").Get<AppSettings>();
 
-string host = appSettings?.RabbitMq?.Host ?? string.Empty;
-string username = appSettings?.RabbitMq?.Username ?? string.Empty;
+string hostName = appSettings?.RabbitMq?.HostName ?? string.Empty;
+string userName = appSettings?.RabbitMq?.UserName ?? string.Empty;
 string password = appSettings?.RabbitMq?.Password ?? string.Empty;
 string productQueueName = appSettings?.RabbitMq?.ProductQueueName ?? string.Empty;
 string productQueueErrorName = appSettings?.RabbitMq?.ProductQueueErrorName ?? string.Empty;
@@ -27,10 +27,9 @@ string quartzTriggerName = appSettings?.Quartz?.TriggerName ?? string.Empty;
 
 builder.Host.UseSerilog((_, loggerConfiguration) => loggerConfiguration.WriteTo.Console(formatProvider: null).ReadFrom.Configuration(builder.Configuration));
 
-//builder.Services.AddSingleton<IJob, ProductMessageJob>();
-
-builder.Services.AddApplicationRegistration();
-builder.Services.AddPersistenceRegistration(builder.Configuration);
+builder.Services
+    .AddApplicationRegistration()
+    .AddPersistenceRegistration(builder.Configuration);
 
 builder.Services.AddMassTransit(x =>
 {
@@ -41,9 +40,9 @@ builder.Services.AddMassTransit(x =>
     x.UsingRabbitMq((context, cfg) =>
     {
         // RabbitMQ sunucusuna bağlantı bilgilerini ekliyoruz
-        cfg.Host(host, h =>
+        cfg.Host(hostName, h =>
         {
-            h.Username(username);
+            h.Username(userName);
             h.Password(password);
         });
 
@@ -104,8 +103,6 @@ builder.Services.AddResponseCompression(options =>
 });
 
 var app = builder.Build();
-
-//IScheduler scheduler = await QuartzJobFactory<ProductMessageJob>.CreateJobAsync("ProductMessageJob", "ProductMessageJobGroup", "ProductMessageTrigger", "ProductMessageTriggerGroup", 300, 120);
 
 app.UseResponseCompression();
 app.UseSerilogRequestLogging();

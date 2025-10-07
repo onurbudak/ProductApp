@@ -14,8 +14,8 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.Configure<AppSettings>(builder.Configuration.GetSection("AppSettings"));
 AppSettings? appSettings = builder.Configuration.GetSection("AppSettings").Get<AppSettings>();
 
-string host = appSettings?.RabbitMq?.Host ?? string.Empty;
-string username = appSettings?.RabbitMq?.Username ?? string.Empty;
+string host = appSettings?.RabbitMq?.HostName ?? string.Empty;
+string username = appSettings?.RabbitMq?.UserName ?? string.Empty;
 string password = appSettings?.RabbitMq?.Password ?? string.Empty;
 string key = appSettings?.JwtSettings?.SecretKey ?? string.Empty;
 string issuer = appSettings?.JwtSettings?.Issuer ?? string.Empty;
@@ -42,8 +42,9 @@ builder.Services.AddLogging(configure =>
     configure.SetMinimumLevel(LogLevel.Trace);
 });
 
-builder.Services.AddApplicationRegistration();
-builder.Services.AddPersistenceRegistration(builder.Configuration);
+builder.Services
+    .AddApplicationRegistration()
+    .AddPersistenceRegistration(builder.Configuration);
 
 // Add services to the container.
 
