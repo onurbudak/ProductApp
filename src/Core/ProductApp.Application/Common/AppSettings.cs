@@ -15,6 +15,7 @@ public class RabbitMq
     public string? Password { get; set; }
     public string? ProductQueueName { get; set; }
     public string? ProductQueueErrorName { get; set; }
+    public int RetryCount { get; set; }
 }
 
 public class Quartz
