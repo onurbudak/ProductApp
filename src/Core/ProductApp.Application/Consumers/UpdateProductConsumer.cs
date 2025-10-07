@@ -25,7 +25,7 @@ public class UpdateProductConsumer : IConsumer<UpdateProductEvent>
     {
         try
         {
-            Console.WriteLine($"UpdateProductConsumer Started");
+           Console.WriteLine($"UpdateProductConsumer Started");
             _logger.LogInformation($"UpdateProductConsumer Started");
 
             UpdateProductEvent updateProductEvent = context.Message;
