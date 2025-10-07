@@ -14,7 +14,7 @@ public class RabbitMqPublisher : IRabbitMqPublisher
     private readonly IRabbitMqConnection _connectionFactory;
     private readonly ILogger<RabbitMqPublisher> _logger;
     private readonly AsyncRetryPolicy _retryPolicy;
-    private readonly AppSettings _settings;
+    private readonly AppSettings? _settings;
 
     public RabbitMqPublisher(IRabbitMqConnection connectionFactory, ILogger<RabbitMqPublisher> logger, IOptions<AppSettings> options)
     {
