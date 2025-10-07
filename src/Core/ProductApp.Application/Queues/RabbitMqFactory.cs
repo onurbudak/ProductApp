@@ -36,33 +36,51 @@ public class RabbitMqFactory : IRabbitMqFactory
 
     public async Task PublishAsync(string hostName, string queue, string message)
     {
-        Console.WriteLine($"PublishAsync Started ...");
-        _logger.LogInformation("PublishAsync Started ...");
+        try
+        {
+            Console.WriteLine($"PublishAsync Started");
+            _logger.LogInformation("PublishAsync Started");
 
-        IChannel channel = await ConnectionAsync(hostName);
-        await channel.QueueDeclareAsync(queue: queue, durable: true, exclusive: false, autoDelete: false, arguments: null);
-        byte[] body = Encoding.UTF8.GetBytes(message);
-        BasicProperties basicProperties = new BasicProperties();
-        await channel.BasicPublishAsync(exchange: "", routingKey: queue, mandatory: true, basicProperties: basicProperties, body: body);
+            IChannel channel = await ConnectionAsync(hostName);
+            await channel.QueueDeclareAsync(queue: queue, durable: true, exclusive: false, autoDelete: false, arguments: null);
+            byte[] body = Encoding.UTF8.GetBytes(message);
+            BasicProperties basicProperties = new BasicProperties();
+            await channel.BasicPublishAsync(exchange: "", routingKey: queue, mandatory: true, basicProperties: basicProperties, body: body);
 
-        Console.WriteLine($"Publish Message : {message}");
-        _logger.LogInformation("Publish Message : {Message}", message);
-        Console.WriteLine("PublishAsync Finished");
-        _logger.LogInformation("PublishAsync Finished");
+            Console.WriteLine($"Publish Message : {message}");
+            _logger.LogInformation("Publish Message : {Message}", message);
+            Console.WriteLine("PublishAsync Finished");
+            _logger.LogInformation("PublishAsync Finished");
 
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error PublishAsync : {ex}");
+            _logger.LogError(ex, "Error PublishAsync");
+            throw;
+        }
     }
 
     public async Task ConsumeAsync(string hostName, string queue)
     {
-        Console.WriteLine("ConsumeAsync Started");
-        _logger.LogInformation("ConsumeAsync Started");
+        try
+        {
+            Console.WriteLine("ConsumeAsync Started");
+            _logger.LogInformation("ConsumeAsync Started");
 
-        IChannel channel = await ConnectionAsync(hostName);
-        var consumer = new AsyncMessageConsumer(channel, _logger, _settings);
-        await channel.BasicConsumeAsync(queue: queue, autoAck: false, consumer: consumer);
+            IChannel channel = await ConnectionAsync(hostName);
+            var consumer = new AsyncMessageConsumer(channel, _logger, _settings);
+            await channel.BasicConsumeAsync(queue: queue, autoAck: false, consumer: consumer);
 
-        Console.WriteLine("ConsumeAsync Finished");
-        _logger.LogInformation("ConsumeAsync Finished");
+            Console.WriteLine("ConsumeAsync Finished");
+            _logger.LogInformation("ConsumeAsync Finished");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error ConsumeAsync : {ex}");
+            _logger.LogError(ex, "Error ConsumeAsync");
+            throw;
+        }
     }
 
     private class AsyncMessageConsumer : IAsyncBasicConsumer
@@ -84,9 +102,6 @@ public class RabbitMqFactory : IRabbitMqFactory
 
             Console.WriteLine("Received Message: {message}");
             _logger.LogInformation("Received Message: {Message}", message);
-
-            //BasicProperties basicProperties = new BasicProperties();
-            //await Channel.BasicPublishAsync(exchange: exchange, routingKey: _settings?.RabbitMq?.ProductQueueName ?? string.Empty, mandatory: true, basicProperties: basicProperties, body: body, cancellationToken);
 
             await Channel.BasicAckAsync(deliveryTag, false, cancellationToken);
         }

@@ -39,7 +39,6 @@ public class UpdateProductConsumer : IConsumer<UpdateProductEvent>
             updateProductEvent.Status = Convert.ToInt16(status);
 
             updateProductEvent.Status += 1;
-
             Product? mappedProduct = _mapper.Map<Product>(updateProductEvent);
             await _productRepository.UpdateAsync(mappedProduct);
             await context.NotifyConsumed(timer.Elapsed, TypeMetadataCache<Product>.ShortName);
