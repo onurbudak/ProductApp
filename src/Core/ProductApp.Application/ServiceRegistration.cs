@@ -18,7 +18,12 @@ public static class ServiceRegistration
         var assembly = Assembly.GetExecutingAssembly();
 
         services.AddAutoMapper(assembly);
-        services.AddMediatR(assembly);
+
+        services.AddMediatR(cfg =>
+        {
+            cfg.RegisterServicesFromAssembly(assembly);
+        });
+
         services.AddSingleton<IRabbitMqConnection, RabbitMqConnection>();
         services.AddSingleton<IRabbitMqPublisher, RabbitMqPublisher>();
         services.AddSingleton<IRabbitMqConsumer, RabbitMqConsumer>();

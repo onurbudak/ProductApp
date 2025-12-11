@@ -2,7 +2,7 @@
 using MassTransit;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
-using Microsoft.OpenApi.Models;
+using Microsoft.OpenApi;
 using ProductApp.Application;
 using ProductApp.Application.Common;
 using ProductApp.Persistence;
@@ -122,22 +122,6 @@ builder.Services.AddSwaggerGen(opt =>
         BearerFormat = "JWT",
         In = ParameterLocation.Header,
         Description = "JWT token'ı Bearer eklemeden '{token}' formatında girin."
-    });
-
-    // JWT Bearer Security Requirement
-    opt.AddSecurityRequirement(new OpenApiSecurityRequirement
-    {
-        {
-            new OpenApiSecurityScheme
-            {
-                Reference = new OpenApiReference
-                {
-                    Type = ReferenceType.SecurityScheme,
-                    Id = "Bearer"
-                }
-            },
-            Array.Empty<string>()
-        }
     });
 });
 
