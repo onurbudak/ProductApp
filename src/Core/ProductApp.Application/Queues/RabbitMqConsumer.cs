@@ -1,6 +1,5 @@
 ﻿using System.Text;
 using Microsoft.Extensions.Logging;
-using ProductApp.Application.Common;
 using ProductApp.Application.Interfaces.Queues;
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
@@ -10,36 +9,56 @@ namespace ProductApp.Application.Queues;
 public class RabbitMqConsumer : IRabbitMqConsumer
 {
     private readonly IRabbitMqConnection _connectionFactory;
-    private readonly IRabbitMqPublisher _rabbitMqPublisher;
+    private readonly IRabbitMqPublisher _publisher;
     private readonly ILogger<RabbitMqConsumer> _logger;
 
-    public RabbitMqConsumer(IRabbitMqConnection connectionFactory, IRabbitMqPublisher rabbitMqPublisher, ILogger<RabbitMqConsumer> logger)
+    public RabbitMqConsumer(
+        IRabbitMqConnection connectionFactory,
+        IRabbitMqPublisher publisher,
+        ILogger<RabbitMqConsumer> logger)
     {
         _connectionFactory = connectionFactory;
-        _rabbitMqPublisher = rabbitMqPublisher;
+        _publisher = publisher;
         _logger = logger;
     }
 
-    public async Task ConsumeAsync(string queueName, string queueErrorName)
+    public async Task ConsumeAsync(string queueName, string errorQueueName)
     {
         var channel = await _connectionFactory.CreateChannelAsync();
+
+        // Consumer oluştur
         var consumer = new AsyncEventingBasicConsumer(channel);
 
         consumer.ReceivedAsync += async (model, ea) =>
         {
-            var body = ea.Body.ToArray();
-            var message = Encoding.UTF8.GetString(body);
+            var message = Encoding.UTF8.GetString(ea.Body.ToArray());
 
-            _logger.LogInformation("Received message from queue {QueueName}: {Message}", queueErrorName, message);
+            _logger.LogInformation("Received message → Queue: {Queue}, Message: {Message}", queueName, message);
 
-            // TODO: İş mantığını burada çalıştır
+            try
+            {
+                // TODO: İş mantığı burada
+                await _publisher.PublishAsync(queueName, message);
 
-            await _rabbitMqPublisher.PublishAsync(queueName, message);
+                // Ack → Mesaj başarıyla işlendi
+                await channel.BasicAckAsync(ea.DeliveryTag, multiple: false);
 
-            await channel.BasicAckAsync(ea.DeliveryTag, false);
+                _logger.LogInformation("Message processed successfully → Queue: {Queue}", queueName);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex,
+                    "Message processing failed. Moving to error queue. Queue: {Queue}, Message: {Message}",
+                    errorQueueName, message);
+                throw;
+            }
         };
 
-        await channel.BasicConsumeAsync(queue: queueErrorName, autoAck: false, consumer: consumer);
-        _logger.LogInformation("RabbitMQ consumer started for queue: {QueueName}", queueErrorName);
+        await channel.BasicConsumeAsync(
+            queue: queueName,
+            autoAck: false,
+            consumer: consumer);
+
+        _logger.LogInformation("RabbitMQ consumer started → Queue: {Queue}", queueName);
     }
 }
