@@ -24,6 +24,7 @@ int quartzInterval = appSettings?.Quartz?.Interval ?? 0;
 int quartzMaxConcurrency = appSettings?.Quartz?.MaxConcurrency ?? 0;
 string quartzJobName = appSettings?.Quartz?.JobName ?? string.Empty;
 string quartzTriggerName = appSettings?.Quartz?.TriggerName ?? string.Empty;
+int quartzRepeatCount = appSettings?.Quartz?.RepeatCount ?? 0;
 
 builder.Host.UseSerilog((_, loggerConfiguration) => loggerConfiguration.WriteTo.Console(formatProvider: null).ReadFrom.Configuration(builder.Configuration));
 
@@ -35,7 +36,6 @@ builder.Services.AddMassTransit(x =>
 {
     //Consumer'ı ekliyoruz
     x.AddConsumer<UpdateProductConsumer>();
-
     // RabbitMQ ile bağlantıyı kuruyoruz
     x.UsingRabbitMq((context, cfg) =>
     {
@@ -45,7 +45,6 @@ builder.Services.AddMassTransit(x =>
             h.Username(userName);
             h.Password(password);
         });
-
         //Consumer'ı dinlemek için endpoint ekliyoruz
         cfg.ReceiveEndpoint(productQueueName, e =>
         {
@@ -53,14 +52,6 @@ builder.Services.AddMassTransit(x =>
             e.UseMessageRetry(r => r.Interval(massTransitRetryCount, TimeSpan.FromSeconds(massTransitInterval)));
             e.UseInMemoryOutbox(context);
         });
-
-        //cfg.ReceiveEndpoint(productQueueErrorName , e =>
-        //{
-        //    e.ConfigureConsumer<ProductMessageConsumer>(context);
-        //    e.UseMessageRetry(r => r.Interval(3, TimeSpan.FromSeconds(20)));
-        //    e.UseInMemoryOutbox(context);
-        //});
-
     });
 });
 
@@ -81,7 +72,7 @@ builder.Services.AddQuartz(q =>
         .StartAt(DateTimeOffset.Now.AddSeconds(quartzStartTime))
         .WithSimpleSchedule(x => x
             .WithIntervalInSeconds(quartzInterval)
-            .RepeatForever()));
+            .WithRepeatCount(quartzRepeatCount)));
 
     // Quartz logging configuration
     q.UseSimpleTypeLoader();

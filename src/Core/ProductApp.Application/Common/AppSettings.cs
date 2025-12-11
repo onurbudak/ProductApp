@@ -25,6 +25,7 @@ public class Quartz
     public int MaxConcurrency { get; set; }
     public string? JobName { get; set; }
     public string? TriggerName { get; set; }
+    public int RepeatCount { get; set; }
 }
 
 public class MassTransit
