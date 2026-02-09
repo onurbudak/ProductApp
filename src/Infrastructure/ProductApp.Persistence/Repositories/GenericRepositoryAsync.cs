@@ -21,7 +21,7 @@ public class GenericRepositoryAsync<TEntity, TId> : IGenericRepositoryAsync<TEnt
 
     public async Task<TEntity> AddAsync(TEntity entity)
     {
-        entity.CreateDate = DateTime.Now;
+        entity.CreateDate = DateTime.UtcNow;
         await _dbContext.AddAsync(entity);
         await _dbContext.SaveChangesAsync();
         return entity;
@@ -37,7 +37,7 @@ public class GenericRepositoryAsync<TEntity, TId> : IGenericRepositoryAsync<TEnt
             entity.DeleteDate = existingEntity.DeleteDate;
             entity.DeleteUserId = existingEntity.DeleteUserId;
             _dbContext.Entry(existingEntity).CurrentValues.SetValues(entity);
-            existingEntity.UpdateDate = DateTime.Now;
+            existingEntity.UpdateDate = DateTime.UtcNow;
             await _dbContext.SaveChangesAsync();
         }
         return existingEntity;
@@ -48,7 +48,7 @@ public class GenericRepositoryAsync<TEntity, TId> : IGenericRepositoryAsync<TEnt
         TEntity? existingEntity = await _dbContext.Set<TEntity>().FindAsync(entity.Id);
         if (existingEntity is not null)
         {
-            existingEntity.DeleteDate = DateTime.Now;
+            existingEntity.DeleteDate = DateTime.UtcNow;
             existingEntity.IsDeleted = true;
             await _dbContext.SaveChangesAsync();
         }
